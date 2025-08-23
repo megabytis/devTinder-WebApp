@@ -7,14 +7,14 @@ app.use(express.json());
 
 // creating API
 app.post("/signup", async (req, res) => {
-  try {
-    // const User = new UserModel({
-    //   firstName: "Lalu",
-    //   lastName: "Yadav",
-    //   age: 51,
-    //   email: "lallu@yadav.com",
-    // });
+  // const User = new UserModel({
+  //   firstName: "Lalu",
+  //   lastName: "Yadav",
+  //   age: 51,
+  //   email: "lallu@yadav.com",
+  // });
 
+  try {
     await User.save();
     res.send("User added successfully");
   } catch (err) {
