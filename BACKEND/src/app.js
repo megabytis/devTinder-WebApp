@@ -17,8 +17,6 @@ app.post("/sign-up", async (req, res) => {
     email: email,
   });
 
-  console.log(req.body);
-
   try {
     await user.save();
     res.send("User added successfully");
@@ -44,15 +42,33 @@ app.get("/feed", async (req, res, next) => {
 
 // UPDATE
 // updating a user data
-app.patch("/user", async (req, res) => {
-  const updatedUser = req.body;
-  const userID = req.body.userID;
+app.patch("/user/:userID", async (req, res) => {
+  const data = req.body;
+  const userID = req.params?.userID;
 
   try {
-    await UserModel.findByIdAndUpdate(userID, updatedUser);
+    const ALLOWED_UPDATES_LIST = [
+      "firstName",
+      "lastName",
+      "age",
+      "photoURL",
+      "skills",
+    ];
+
+    const isUpdateAllowed = Object.keys(data).every((k) =>
+      ALLOWED_UPDATES_LIST.includes(k)
+    );
+
+    if (!isUpdateAllowed) {
+      throw new Error("Update now allowed !");
+    }
+
+    await UserModel.findByIdAndUpdate(userID, data, {
+      runValidators: true,
+    });
     res.send("User updated Successfully");
   } catch (err) {
-    res.status(400).send("Error ocurred");
+    res.status(400).send(`UPDATE FAILED : ${err.message}`);
   }
 });
 
@@ -64,7 +80,7 @@ app.delete("/user", async (req, res) => {
     await UserModel.findByIdAndDelete(req.body.userID);
     res.send("user Deleted successfully");
   } catch (err) {
-    res.status(400).send("Error Occurred");
+    res.status(400).send("Error ocurred");
   }
 });
 
