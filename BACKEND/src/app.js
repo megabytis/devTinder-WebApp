@@ -1,4 +1,5 @@
 const express = require("express");
+const validator = require("validator");
 const { connectDB, mongoose } = require("./config/database");
 const { UserModel } = require("./models/user");
 
@@ -8,13 +9,26 @@ app.use(express.json());
 // CREATE
 // creating SIGNUP API
 app.post("/sign-up", async (req, res) => {
-  const { firstName, lastName, age, email } = req.body;
+  const {
+    firstName,
+    lastName,
+    age,
+    email,
+    password,
+    skills,
+    photoURL,
+    gender,
+  } = req.body;
 
   const user = new UserModel({
     firstName: firstName,
     lastName: lastName,
     age: age,
     email: email,
+    password: password,
+    skills: skills,
+    photoURL: photoURL,
+    gender: gender,
   });
 
   try {
@@ -27,7 +41,7 @@ app.post("/sign-up", async (req, res) => {
 
 // READ
 // creating FEED API :- to get all users data from database
-app.get("/feed", async (req, res, next) => {
+app.get("/feed", async (req, res) => {
   try {
     const foundUser = await UserModel.findOne({ email: req.body.email });
     if (foundUser.length === 0) {
