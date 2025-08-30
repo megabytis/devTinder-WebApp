@@ -2,13 +2,17 @@ const express = require("express");
 const validator = require("validator");
 const { connectDB, mongoose } = require("./config/database");
 const { UserModel } = require("./models/user");
+const { validateSignupData } = require("./utils/validate");
 
 const app = express();
 app.use(express.json());
 
 // CREATE
 // creating SIGNUP API
-app.post("/sign-up", async (req, res) => {
+app.post("/sign-up", async (req, res, next) => {
+  // 1st Validating Data
+  validateSignupData(req);
+
   const {
     firstName,
     lastName,
@@ -35,7 +39,7 @@ app.post("/sign-up", async (req, res) => {
     await user.save();
     res.send("User added successfully");
   } catch (err) {
-    console.log(err);
+    next(err);
   }
 });
 
@@ -96,6 +100,12 @@ app.delete("/user", async (req, res) => {
   } catch (err) {
     res.status(400).send("Error ocurred");
   }
+});
+
+// Global Error Handler middleWare
+app.use((err, re, res, next) => {
+  // console.log(err); // for debugging purpose
+  return res.status(err.statusCode || 500).send(`ERROR: ${err.message}`);
 });
 
 connectDB()
