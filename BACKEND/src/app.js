@@ -1,12 +1,15 @@
 const express = require("express");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 const { connectDB, mongoose } = require("./config/database");
 const { UserModel } = require("./models/user");
 const { validateSignupData } = require("./utils/validate");
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 // CREATE
 // creating SIGNUP API
@@ -66,10 +69,46 @@ app.post("/login", async (req, res, next) => {
     );
 
     if (isPasswordSame) {
+      // if password is valid then ;
+      // Create a JWT token
+      const token = await jwt.sign(
+        { _id: foundUserData._id },
+        "#MyDevT1nder----"
+      );
+
+      // Add the token to Cookie & then send the response back
+      res.cookie("token", token);
+
       res.send("Login Successful!");
     } else {
       throw new Error("Invalid Creadential!");
     }
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get("/profile", async (req, res, next) => {
+  try {
+    const cookies = req.cookies;
+
+    const { token } = cookies;
+
+    if (!token) {
+      throw new Error("Token is not valid!");
+    }
+
+    const decodeToken = await jwt.verify(token, "#MyDevT1nder----");
+    const { _id } = decodeToken;
+
+    console.log(`User DB id is : ${_id}`);
+
+    const user = await UserModel.findById(_id);
+    if (!user) {
+      throw new Error("User not present!");
+    }
+
+    res.send(user);
   } catch (err) {
     next(err);
   }
