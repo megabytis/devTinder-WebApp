@@ -1,11 +1,11 @@
 const express = require("express");
-const validator = require("validator");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
-const { connectDB, mongoose } = require("./config/database");
+const { connectDB } = require("./config/database");
 const { UserModel } = require("./models/user");
 const { validateSignupData } = require("./utils/validate");
+const { userAuth } = require("./middleware/Auth");
 
 const app = express();
 app.use(express.json());
@@ -88,35 +88,14 @@ app.post("/login", async (req, res, next) => {
   }
 });
 
-app.get("/profile", async (req, res, next) => {
-  try {
-    const cookies = req.cookies;
-
-    const { token } = cookies;
-
-    if (!token) {
-      throw new Error("Token is not valid!");
-    }
-
-    const decodeToken = await jwt.verify(token, "#MyDevT1nder----");
-    const { _id } = decodeToken;
-
-    console.log(`User DB id is : ${_id}`);
-
-    const user = await UserModel.findById(_id);
-    if (!user) {
-      throw new Error("User not present!");
-    }
-
-    res.send(user);
-  } catch (err) {
-    next(err);
-  }
+app.get("/profile", userAuth, async (req, res, next) => {
+  const user = req.user;
+  res.send(user);
 });
 
 // READ
 // creating FEED API :- to get all users data from database
-app.get("/feed", async (req, res, next) => {
+app.get("/feed", userAuth, async (req, res, next) => {
   try {
     const foundUser = await UserModel.findOne({ email: req.body.email });
     if (foundUser.length === 0) {
@@ -131,7 +110,7 @@ app.get("/feed", async (req, res, next) => {
 
 // UPDATE
 // updating a user data
-app.patch("/user/:userID", async (req, res) => {
+app.patch("/user/:userID", userAuth, async (req, res) => {
   const data = req.body;
   const userID = req.params?.userID;
 
@@ -164,9 +143,8 @@ app.patch("/user/:userID", async (req, res) => {
 
 // DELETE
 // deleting a user from DB
-app.delete("/user", async (req, res, next) => {
+app.delete("/user",userAuth, async (req, res, next) => {
   try {
-    // await UserModel.findByIdAndDelete({ _id: req.body.userID }); // OR
     await UserModel.findByIdAndDelete(req.body.userID);
     res.send("user Deleted successfully");
   } catch (err) {
@@ -176,7 +154,6 @@ app.delete("/user", async (req, res, next) => {
 
 // Global Error Handler middleWare
 app.use((err, req, res, next) => {
-  // console.log(err); // for debugging purpose
   return res.status(err.statusCode || 500).send(`ERROR: ${err.message}`);
 });
 
