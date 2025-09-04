@@ -65,10 +65,7 @@ app.post("/login", async (req, res, next) => {
     }
 
     // 2️⃣ Validate password
-    const isPasswordSame = await bcrypt.compare(
-      password,
-      foundUserData.password
-    );
+    const isPasswordSame = await foundUserData.validatePassword(password);
 
     if (isPasswordSame) {
       // if password is valid then ;
