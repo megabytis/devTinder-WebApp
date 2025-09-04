@@ -73,11 +73,15 @@ app.post("/login", async (req, res, next) => {
       // Create a JWT token
       const token = await jwt.sign(
         { _id: foundUserData._id },
-        "#MyDevT1nder----"
+        "#MyDevT1nder----",
+        { expiresIn: "10s" }
       );
 
       // Add the token to Cookie & then send the response back
-      res.cookie("token", token);
+      res.cookie("token", token, {
+        httpOnly: true,
+        expires: new Date(Date.now() + 1 * 3600000),
+      });
 
       res.send("Login Successful!");
     } else {
@@ -96,16 +100,8 @@ app.get("/profile", userAuth, async (req, res, next) => {
 // READ
 // creating FEED API :- to get all users data from database
 app.get("/feed", userAuth, async (req, res, next) => {
-  try {
-    const foundUser = await UserModel.findOne({ email: req.body.email });
-    if (foundUser.length === 0) {
-      res.status(404).send("Invalid Creadential!");
-    } else {
-      res.send(foundUser);
-    }
-  } catch (err) {
-    next(err);
-  }
+  const user = req.user;
+  res.send(user);
 });
 
 // UPDATE
@@ -143,7 +139,7 @@ app.patch("/user/:userID", userAuth, async (req, res) => {
 
 // DELETE
 // deleting a user from DB
-app.delete("/user",userAuth, async (req, res, next) => {
+app.delete("/user", userAuth, async (req, res, next) => {
   try {
     await UserModel.findByIdAndDelete(req.body.userID);
     res.send("user Deleted successfully");
