@@ -57,12 +57,14 @@ app.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
+    // 1️⃣ Find User
     // first checking wheather the email id is present in the DataBase or not
     const foundUserData = await UserModel.findOne({ email: email });
     if (!foundUserData) {
-      throw new Error("Invalid Creadential!");
+      throw new Error("Invalid Credential!");
     }
 
+    // 2️⃣ Validate password
     const isPasswordSame = await bcrypt.compare(
       password,
       foundUserData.password
@@ -70,22 +72,19 @@ app.post("/login", async (req, res, next) => {
 
     if (isPasswordSame) {
       // if password is valid then ;
-      // Create a JWT token
-      const token = await jwt.sign(
-        { _id: foundUserData._id },
-        "#MyDevT1nder----",
-        { expiresIn: "10s" }
-      );
+      // 3️⃣ Generate JWT via schema method
+      const token = await foundUserData.getJWT();
 
       // Add the token to Cookie & then send the response back
       res.cookie("token", token, {
         httpOnly: true,
-        expires: new Date(Date.now() + 1 * 3600000),
+        maxAge: 60 * 60 * 1000, // 1 hour
+        sameSite: "strict", // CSRF protection
       });
 
       res.send("Login Successful!");
     } else {
-      throw new Error("Invalid Creadential!");
+      throw new Error("Invalid Credential!");
     }
   } catch (err) {
     next(err);

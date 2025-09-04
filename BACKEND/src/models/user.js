@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const jwt = require("jsonwebtoken");
 
+// Defining Schema
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -91,6 +93,16 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Schema Methods
+userSchema.methods.getJWT = async function () {
+  const user = this;
+  const token = jwt.sign({ _id: user._id }, "#MyDevT1nder----", {
+    expiresIn: "10s",
+  });
+
+  return token;
+};
 
 const UserModel = mongoose.model("User", userSchema);
 
