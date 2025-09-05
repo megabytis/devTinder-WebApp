@@ -1,7 +1,12 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
+
+const { validateSignupData } = require("../utils/validate");
+const { UserModel } = require("../models/user");
 
 const authRouter = express.Router();
 
+// SIGN-UP API
 authRouter.post("/sign-up", async (req, res, next) => {
   const {
     firstName,
@@ -41,6 +46,7 @@ authRouter.post("/sign-up", async (req, res, next) => {
   }
 });
 
+// LOGIN API
 authRouter.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -76,6 +82,4 @@ authRouter.post("/login", async (req, res, next) => {
   }
 });
 
-module.exports = {
-  router,
-};
+module.exports = authRouter;
