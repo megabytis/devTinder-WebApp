@@ -1,5 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const { validateSignupData } = require("../utils/validate");
 const { UserModel } = require("../models/user");
@@ -80,6 +81,15 @@ authRouter.post("/login", async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+authRouter.post("/logout", (req, res, next) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "strict",
+    secure: true,
+  });
+  res.send("Logout successful!");
 });
 
 module.exports = authRouter;
