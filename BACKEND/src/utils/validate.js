@@ -12,6 +12,28 @@ const validateSignupData = (req) => {
   }
 };
 
+const validateEditProfileData = (req) => {
+  const dataUserWannaModify = req.body;
+  const ALLOWED_UPDATES_LIST = [
+    "firstName",
+    "lastName",
+    "age",
+    "photoURL",
+    "skills",
+    "about",
+    "gender",
+  ];
+
+  const isUpdateAllowed = Object.keys(dataUserWannaModify).every((key) =>
+    ALLOWED_UPDATES_LIST.includes(key)
+  );
+
+  if (!isUpdateAllowed) {
+    throw new Error("Update Not Allowed!");
+  }
+};
+
 module.exports = {
   validateSignupData,
+  validateEditProfileData,
 };
