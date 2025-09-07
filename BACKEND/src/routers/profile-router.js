@@ -11,24 +11,31 @@ profileRouter.get("/profile/view", userAuth, async (req, res, next) => {
   res.send(user);
 });
 
-profileRouter.patch(
-  "/profile/edit/:userID",
-  userAuth,
-  async (req, res, next) => {
-    try {
-      const dataUserWannaModify = req.body;
-      const userID = req.params?.userID;
+profileRouter.patch("/profile/edit", userAuth, async (req, res, next) => {
+  try {
+    const loggenInUser = req.user;
+    const dataUserWannaModify = req.body;
+    const userID = loggenInUser._id;
 
-      validateEditProfileData(req);
+    validateEditProfileData(req);
 
-      await UserModel.findByIdAndUpdate(userID, dataUserWannaModify, {
-        runValidators: true,
-      });
-      res.send("User updated Successfully");
-    } catch (err) {
-      res.status(400).send(`UPDATE FAILED : ${err.message}`);
-    }
+    // await UserModel.findByIdAndUpdate(userID, dataUserWannaModify, {
+    //   runValidators: true,
+    // });
+    // ----------OR------------
+    Object.keys(dataUserWannaModify).forEach((key) => {
+      loggenInUser[key] = dataUserWannaModify[key];
+    });
+
+    await loggenInUser.save();
+
+    res.json({
+      message: ` ${loggenInUser.firstName}, your profile updated Successfully`,
+      data: loggenInUser,
+    });
+  } catch (err) {
+    res.status(400).send(`UPDATE FAILED : ${err.message}`);
   }
-);
+});
 
 module.exports = profileRouter;
