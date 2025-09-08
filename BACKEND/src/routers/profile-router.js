@@ -1,4 +1,5 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 
 const { userAuth } = require("../middleware/Auth");
 const { UserModel } = require("../models/user");
@@ -11,6 +12,7 @@ profileRouter.get("/profile/view", userAuth, async (req, res, next) => {
   res.send(user);
 });
 
+// user's profile update API (except password)
 profileRouter.patch("/profile/edit", userAuth, async (req, res, next) => {
   try {
     const loggenInUser = req.user;
@@ -36,6 +38,18 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res, next) => {
   } catch (err) {
     res.status(400).send(`UPDATE FAILED : ${err.message}`);
   }
+});
+
+// Forgot password API
+profileRouter.patch("/profile/password", userAuth, async (req, res, next) => {
+  const loggenInUser = req.user;
+  const newPass = req.body.password;
+  const hashedPassword = await bcrypt.hash(newPass, 10);
+  loggenInUser.password = hashedPassword;
+  loggenInUser.save();
+  res.json({
+    message: "Password updated successfully!",
+  });
 });
 
 module.exports = profileRouter;
