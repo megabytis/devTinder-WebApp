@@ -8,7 +8,7 @@ const { UserModel } = require("../models/user");
 const authRouter = express.Router();
 
 // SIGN-UP API
-authRouter.post("/sign-up", async (req, res, next) => {
+authRouter.post("/auth/sign-up", async (req, res, next) => {
   const {
     firstName,
     lastName,
@@ -48,7 +48,7 @@ authRouter.post("/sign-up", async (req, res, next) => {
 });
 
 // LOGIN API
-authRouter.post("/login", async (req, res, next) => {
+authRouter.post("/auth/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -83,7 +83,7 @@ authRouter.post("/login", async (req, res, next) => {
   }
 });
 
-authRouter.post("/logout", (req, res, next) => {
+authRouter.post("/auth/logout", (req, res, next) => {
   res.clearCookie("token", {
     httpOnly: true,
     sameSite: "strict",
