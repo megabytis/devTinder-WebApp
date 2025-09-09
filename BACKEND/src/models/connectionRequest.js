@@ -25,7 +25,7 @@ const connectionRequestSchema = new mongoose.Schema(
 );
 
 const connectionRequestModel = new mongoose.model(
-  "connectionRequestModel",
+  "connectionRequest",
   connectionRequestSchema
 );
 
