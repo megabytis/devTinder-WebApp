@@ -18,14 +18,16 @@ app.use("/", requestRouter);
 
 // Global Error Handler middleWare
 app.use((err, req, res, next) => {
-  return res.status(err.statusCode || 500).send(`ERROR: ${err.message}`);
+  return res
+    .status(err.statusCode || 500)
+    .json({ message: `ERROR: ${err.message}` });
 });
 
 connectDB()
-  .then(() => { 
+  .then(() => {
     console.log("DB connected to app");
-    app.listen(8888, () => {
-      console.log("App is listening on port 8888");
+    app.listen(8080, () => {
+      console.log("App is listening on port 8080");
     });
   })
   .catch((err) => console.log(err));
