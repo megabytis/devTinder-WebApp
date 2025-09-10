@@ -11,12 +11,14 @@ reqRouter.post(
   async (req, res, next) => {
     try {
       const fromUserID = req.user._id;
+      const fromUser = req.user;
       const toUserID = req.params?.toUserID;
+      const toUser = await UserModel.findById(toUserID);
       const status = req.params?.status;
 
       // checking wheather toUserID even exists or not in our DB
       // or to handle if attacker tries to input a random toUserID
-      const doesToUserIDExist = await UserModel.findById(toUserID);
+      const doesToUserIDExist = toUser;
       if (!doesToUserIDExist) {
         throw new Error("Bad user request!");
       }
@@ -49,10 +51,15 @@ reqRouter.post(
 
       const connectionData = await connectionRequest.save();
 
-      res.json({
-        message: `Connecion request sent sucessfully!`,
-        data: connectionData,
-      });
+      status === "interested"
+        ? res.json({
+            message: `${fromUser.firstName} is ${status} in ${toUser.firstName} 💐`,
+            data: connectionData,
+          })
+        : res.json({
+            message: `${fromUser.firstName}, ${status} ${toUser.firstName} 😔`,
+            data: connectionData,
+          });
     } catch (err) {
       next(err);
     }
