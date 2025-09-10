@@ -1,6 +1,7 @@
 const express = require("express");
 const { userAuth } = require("../middleware/Auth");
 const { connectionRequestModel } = require("../models/connectionRequest");
+const { UserModel } = require("../models/user");
 
 const reqRouter = express.Router();
 
@@ -13,24 +14,31 @@ reqRouter.post(
       const toUserID = req.params?.toUserID;
       const status = req.params?.status;
 
-      // But in out request schema, in status there are many things, from those we only need to filter out either interested/ignored
-      const filteredList = ["interested", "ignored"];
-      if (!filteredList.includes(status)) {
-        res.status(400).json({ message: `Invalid status type!` });
+      // checking wheather toUserID even exists or not in our DB
+      // or to handle if attacker tries to input a random toUserID
+      const doesToUserIDExist = await UserModel.findById(toUserID);
+      if (!doesToUserIDExist) {
+        throw new Error("Bad user request!");
+      }
+
+      // But in our request schema, in status there are many things, from those we only need to filter out either interested/ignored
+      const filteredStatusList = ["interested", "ignored"];
+      if (!filteredStatusList.includes(status)) {
+        throw new Error(`Invalid status type!`);
       }
 
       // If there are existing same connection request, Then;
       // find wheather there is already user req exists or not, if yes then throw error !
-      const existingConnectionRequest = await connectionRequestModel.findOne({
-        $or: [
-          { fromUserID: fromUserID, toUserID: toUserID },
-          { fromUserID: toUserID, toUserID: fromUserID },
-        ],
-      });
+      const isItAnExistingConnectionRequest =
+        await connectionRequestModel.findOne({
+          $or: [
+            { fromUserID: fromUserID, toUserID: toUserID },
+            { fromUserID: toUserID, toUserID: fromUserID },
+          ],
+        });
       // It means check connection request from A->B OR B->A, if exists or not!
-
-      if (existingConnectionRequest) {
-        res.status(400).json({ message: `Request already has been sent!` });
+      if (isItAnExistingConnectionRequest) {
+        throw new Error(`Request already has been sent!`);
       }
 
       const connectionRequest = new connectionRequestModel({
