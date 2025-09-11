@@ -66,4 +66,42 @@ reqRouter.post(
   }
 );
 
+reqRouter.post(
+  "/request/review/:status/:requestID",
+  userAuth,
+  async (req, res, next) => {
+    try {
+      const status = req.params?.status;
+      const fromUserID = req.user._id;
+      const toUserID = req.params?.requestID;
+      const toUser = await UserModel.findById(toUserID);
+
+      const anyExistingRequest = await connectionRequestModel.findOne({
+        fromUserID: toUserID,
+        toUserID: fromUserID,
+        status: "interested",
+      });
+      if (!anyExistingRequest) {
+        throw new Error("No request found!");
+      }
+
+      // filtering status only to accepted & rejected
+      const filteredStatusList = ["accepted", "rejected"];
+      if (!filteredStatusList.includes(status)) {
+        throw new Error(`Invalid status type!`);
+      }
+
+      anyExistingRequest.status = status;
+      const updatedRequest = await anyExistingRequest.save();
+
+      res.json({
+        message: `${req.user.firstName}, ${status} ${toUser.firstName}`,
+        data: updatedRequest,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 module.exports = reqRouter;
