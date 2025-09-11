@@ -7,6 +7,7 @@ const { userAuth } = require("./middleware/Auth");
 const authRouter = require("./routers/auth-router");
 const profileRouter = require("./routers/profile-router");
 const requestRouter = require("./routers/request-router");
+const userRouter = require("./routers/user-router");
 
 const app = express();
 app.use(express.json());
@@ -15,6 +16,7 @@ app.use(cookieParser());
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
+app.use("/", userRouter);
 
 // Global Error Handler middleWare
 app.use((err, req, res, next) => {
