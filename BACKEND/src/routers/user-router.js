@@ -12,7 +12,10 @@ userRouter.get("/user/connections", userAuth, async (req, res, next) => {
       status: "accepted",
       $or: [{ toUserID: user._id }, { fromUserID: user._id }],
     });
-    res.send(foundDocs);
+    res.json({
+      message: "Connections",
+      data: foundDocs,
+    });
   } catch (err) {
     next(err);
   }
@@ -21,10 +24,13 @@ userRouter.get("/user/connections", userAuth, async (req, res, next) => {
 userRouter.get("/user/requests/recieved", userAuth, async (req, res, next) => {
   try {
     const user = req.user;
-    const foundDocs = await connectionRequestModel.find({
-      status: "interested",
-      toUserID: user._id,
-    });
+    const foundDocs = await connectionRequestModel
+      .find({
+        status: "interested",
+        toUserID: user._id,
+      })
+      .populate("fromUserID", ["firstName", "lastName"]);
+
     res.json({ message: `All requests Recieved.`, data: foundDocs });
   } catch (err) {
     next(err);
