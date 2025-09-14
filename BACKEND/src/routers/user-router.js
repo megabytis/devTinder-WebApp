@@ -52,9 +52,21 @@ userRouter.get("/user/requests/recieved", userAuth, async (req, res, next) => {
 
 userRouter.get("/user/feed", userAuth, async (req, res, next) => {
   try {
+    const SAFE_PROPERTIES_TO_SHOW = [
+      "firstName",
+      "lastName",
+      "photoURL",
+      "skills",
+      "about",
+    ];
+
     const user = req.user;
-    const docs = await UserModel.find({ _id: { $ne: user._id } });
-    res.json({ message: `Feeds`, data: docs });
+
+    const docs = await UserModel.find({ _id: { $ne: user._id } }).select(
+      SAFE_PROPERTIES_TO_SHOW.join(" ") + " -_id"
+    );
+
+    res.json({ message: "Feeds", data: docs });
   } catch (err) {
     next(err);
   }
