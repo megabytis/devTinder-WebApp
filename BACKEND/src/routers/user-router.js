@@ -8,13 +8,26 @@ const userRouter = express.Router();
 userRouter.get("/user/connections", userAuth, async (req, res, next) => {
   try {
     const user = req.user;
-    const foundDocs = await connectionRequestModel.find({
-      status: "accepted",
-      $or: [{ toUserID: user._id }, { fromUserID: user._id }],
+    const foundDocs = await connectionRequestModel
+      .find({
+        status: "accepted",
+        $or: [{ toUserID: user._id }, { fromUserID: user._id }],
+      })
+      .populate("fromUserID", ["firstName", "lastName"])
+      .populate("toUserID", ["firstName", "lastName"]);
+
+    const connectionWithOtherUser = foundDocs.map((doc) => {
+      const otherUser =
+        doc.fromUserID._id.toString() === user._id.toString()
+          ? doc.toUserID
+          : doc.fromUserID;
+
+      return otherUser;
     });
+
     res.json({
       message: "Connections",
-      data: foundDocs,
+      data: connectionWithOtherUser,
     });
   } catch (err) {
     next(err);
