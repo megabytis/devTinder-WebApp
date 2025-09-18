@@ -5,6 +5,14 @@ const { UserModel } = require("../models/user");
 
 const userRouter = express.Router();
 
+const SAFE_PROPERTIES_TO_SHOW = [
+  "firstName",
+  "lastName",
+  "photoURL",
+  "skills",
+  "about",
+];
+
 userRouter.get("/user/connections", userAuth, async (req, res, next) => {
   try {
     const user = req.user;
@@ -42,7 +50,7 @@ userRouter.get("/user/requests/recieved", userAuth, async (req, res, next) => {
         status: "interested",
         toUserID: user._id,
       })
-      .populate("fromUserID", ["firstName", "lastName"]);
+      .populate("fromUserID", SAFE_PROPERTIES_TO_SHOW);
 
     res.json({ message: `All requests Recieved.`, data: foundDocs });
   } catch (err) {
@@ -52,21 +60,41 @@ userRouter.get("/user/requests/recieved", userAuth, async (req, res, next) => {
 
 userRouter.get("/user/feed", userAuth, async (req, res, next) => {
   try {
-    const SAFE_PROPERTIES_TO_SHOW = [
-      "firstName",
-      "lastName",
-      "photoURL",
-      "skills",
-      "about",
-    ];
-
     const user = req.user;
 
-    const docs = await UserModel.find({ _id: { $ne: user._id } }).select(
-      SAFE_PROPERTIES_TO_SHOW.join(" ") + " -_id"
-    );
+    const connectionList = await connectionRequestModel
+      .find({
+        // status: { $in: ["interested", "accepted", "ignored", "rejected"] },
+        $or: [{ fromUserID: user._id }, { toUserID: user._id }],
+      })
+      .select("fromUserID toUserID");
 
-    res.json({ message: "Feeds", data: docs });
+    const notToShowUsersIDsSet = new Set();
+
+    // Adding current user to set, cuz my id also should be ignored, cuz i don't wanna see my profile in feed :)
+    notToShowUsersIDsSet.add(user._id.toString());
+
+    // Adding all users of req-model to the set
+    for (el of connectionList) {
+      notToShowUsersIDsSet.add(el.fromUserID.toString());
+      notToShowUsersIDsSet.add(el.toUserID.toString());
+    }
+
+    // converting set to array
+    const finalExcludeIDsList = [...notToShowUsersIDsSet];
+    console.log(finalExcludeIDsList);
+
+    const docs = await UserModel.find({
+      $and: [
+        { _id: { $nin: finalExcludeIDsList } },
+        { _id: { $ne: user._id } },
+      ],
+    }).select(SAFE_PROPERTIES_TO_SHOW.join(" "));
+
+    res.json({
+      message: "Feeds",
+      data: docs,
+    });
   } catch (err) {
     next(err);
   }
