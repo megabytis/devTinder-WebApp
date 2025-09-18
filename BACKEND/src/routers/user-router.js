@@ -89,7 +89,6 @@ userRouter.get("/user/feed", userAuth, async (req, res, next) => {
 
     // converting set to array
     const finalExcludeIDsList = [...notToShowUsersIDsSet];
-    console.log(finalExcludeIDsList);
 
     const docs = await UserModel.find({
       $and: [
