@@ -62,6 +62,10 @@ userRouter.get("/user/feed", userAuth, async (req, res, next) => {
   try {
     const user = req.user;
 
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
     const connectionList = await connectionRequestModel
       .find({
         // status: { $in: ["interested", "accepted", "ignored", "rejected"] },
@@ -89,7 +93,10 @@ userRouter.get("/user/feed", userAuth, async (req, res, next) => {
         { _id: { $nin: finalExcludeIDsList } },
         { _id: { $ne: user._id } },
       ],
-    }).select(SAFE_PROPERTIES_TO_SHOW.join(" "));
+    })
+      .select(SAFE_PROPERTIES_TO_SHOW.join(" "))
+      .skip(skip)
+      .limit(limit);
 
     res.json({
       message: "Feeds",
