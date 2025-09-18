@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DevTinder Test Frontend</title>
+</head>
+<body>
+  <h1>DevTinder Frontend (Test Only)</h1>
+
+  <!-- Signup -->
+  <h2>Signup</h2>
+  <input id="signupEmail" placeholder="Email">
+  <input id="signupPass" type="password" placeholder="Password">
+  <button id="signupBtn">Signup</button>
+
+  <!-- Login -->
+  <h2>Login</h2>
+  <input id="loginEmail" placeholder="Email">
+  <input id="loginPass" type="password" placeholder="Password">
+  <button id="loginBtn">Login</button>
+
+  <!-- Feed -->
+  <h2>Feed</h2>
+  <button id="loadFeedBtn">Load Feed</button>
+  <div id="feed"></div>
+
+  <script>
+    const signupBtn = document.getElementById("signupBtn");
+    const loginBtn = document.getElementById("loginBtn");
+    const loadFeedBtn = document.getElementById("loadFeedBtn");
+    const feedDiv = document.getElementById("feed");
+
+    // ---------------- Signup ----------------
+    signupBtn.addEventListener("click", async () => {
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPass").value;
+
+      try {
+        const res = await fetch("http://localhost:8080/sign-up", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+          credentials: "include"
+        });
+        const data = await res.json();
+        console.log("Signup:", data);
+        alert("Signup complete! Now login.");
+      } catch (err) {
+        console.error(err);
+      }
+    });
+
+    // ---------------- Login ----------------
+    loginBtn.addEventListener("click", async () => {
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPass").value;
+
+      try {
+        const res = await fetch("http://localhost:8080/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+          credentials: "include"
+        });
+        const data = await res.json();
+        console.log("Login:", data);
+
+        if (data.message === "Login Successful!") {
+          alert("Login successful!");
+        } else {
+          alert(data.message || "Login failed!");
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+
+    // ---------------- Load Feed ----------------
+    loadFeedBtn.addEventListener("click", async () => {
+      try {
+        const res = await fetch("http://localhost:8080/user/feed", {
+          method: "GET",
+          credentials: "include"
+        });
+        const data = await res.json();
+        console.log("Feed:", data);
+
+        feedDiv.innerHTML = "";
+
+        if (!data.data || data.data.length === 0) {
+          feedDiv.innerHTML = "<p>No users to show.</p>";
+        } else {
+          data.data.forEach(user => {
+            const div = document.createElement("div");
+            const fullName = `${user.firstName || ""} ${user.lastName || ""}`.trim() || "Unnamed";
+            div.innerHTML = `<p>${user.name || "Unnamed"} (${user.email || "No Email"})</p>`;
+            feedDiv.appendChild(div);
+          });
+        }
+      } catch (err) {
+        console.error(err);
+        feedDiv.innerHTML = "<p>Error loading feed. Are you logged in?</p>";
+      }
+    });
+  </script>
+</body>
+</html>
