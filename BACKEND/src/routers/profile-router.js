@@ -41,7 +41,7 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res, next) => {
 });
 
 // Forgot password API
-profileRouter.patch("/profile/password", userAuth, async (req, res, next) => {
+profileRouter.patch("/profile/edit/password", userAuth, async (req, res, next) => {
   const loggenInUser = req.user;
   const newPass = req.body.password;
   const hashedPassword = await bcrypt.hash(newPass, 10);

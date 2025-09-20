@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>API Tester</title>
+  <style>
+    body { font-family: sans-serif; background: #111; color: #eee; padding: 2rem; }
+    h2 { margin-top: 2rem; }
+    input, button, textarea {
+      display: block; margin: 0.5rem 0; padding: 0.5rem;
+      border-radius: 5px; border: none;
+    }
+    button { background: #4cafef; color: #fff; cursor: pointer; }
+    pre { background: #222; padding: 1rem; border-radius: 5px; }
+    .card {
+      border: 1px solid #444; padding: 1rem; margin: 0.5rem 0;
+      border-radius: 8px; background: #1c1c1c;
+    }
+    .card img { width: 50px; height: 50px; border-radius: 50%; }
+  </style>
+</head>
+<body>
+  <h1>Backend API Tester 🚀</h1>
+
+  <!-- Signup -->
+  <h2>Signup</h2>
+  <input id="signupEmail" placeholder="Email" />
+  <input id="signupPassword" type="password" placeholder="Password" />
+  <input id="signupName" placeholder="Full Name" />
+  <input id="signupAge" type="number" placeholder="Age" />
+  <button onclick="signup()">Sign Up</button>
+
+  <!-- Login -->
+  <h2>Login</h2>
+  <input id="loginEmail" placeholder="Email" />
+  <input id="loginPassword" type="password" placeholder="Password" />
+  <button onclick="login()">Login</button>
+  <button onclick="logout()">Logout</button>
+
+  <!-- Forgot password -->
+  <h2>Forgot Password</h2>
+  <input id="forgotEmail" placeholder="Email" />
+  <button onclick="forgotPassword()">Send Reset Link</button>
+
+  <!-- Profile -->
+  <h2>Profile</h2>
+  <button onclick="getProfile()">Get Profile</button>
+  <div id="profile"></div>
+
+  <!-- Edit Profile -->
+  <h2>Edit Profile</h2>
+  <input id="editName" placeholder="Full Name" />
+  <input id="editAge" type="number" placeholder="Age" />
+  <textarea id="editAbout" placeholder="About"></textarea>
+  <input id="editSkills" placeholder="Skills (comma separated)" />
+  <button onclick="editProfile()">Update Profile</button>
+
+  <!-- Feed -->
+  <h2>Feed</h2>
+  <button onclick="getFeed()">Get Feed</button>
+  <div id="feed"></div>
+
+  <!-- Connection Requests -->
+  <h2>Connection Requests</h2>
+  <input id="targetUserId" placeholder="Target User ID" />
+  <button onclick="sendRequest('interested')">Send Interested</button>
+  <button onclick="sendRequest('ignored')">Send Ignored</button>
+
+  <h2>Review Requests</h2>
+  <input id="requestId" placeholder="Request ID" />
+  <button onclick="reviewRequest('accepted')">Accept</button>
+  <button onclick="reviewRequest('rejected')">Reject</button>
+
+  <h2>Incoming Requests</h2>
+<button onclick="getIncomingRequests()">Get Requests</button>
+<div id="incomingRequests"></div>
+
+  <h2>Connections</h2>
+  <button onclick="getConnections()">Get My Connections</button>
+  <div id="connections"></div>
+
+  <!-- Debug -->
+  <h2>Raw Result (debug)</h2>
+  <pre id="output">Waiting...</pre>
+
+<script>
+  const API = "http://localhost:8080"; // backend base url
+
+  async function api(path, options = {}) {
+    const res = await fetch(API + path, {
+      credentials: "include",
+      headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+      ...options
+    });
+    const text = await res.text();
+    try { return JSON.parse(text); } catch { return text; }
+  }
+
+  function show(result) {
+    document.getElementById("output").textContent = JSON.stringify(result, null, 2);
+  }
+
+  // Auth
+  async function signup() {
+    const data = {
+      email: document.getElementById("signupEmail").value,
+      password: document.getElementById("signupPassword").value,
+      fullName: document.getElementById("signupName").value,
+      age: parseInt(document.getElementById("signupAge").value)
+    };
+    show(await api("/auth/sign-up", { method: "POST", body: JSON.stringify(data) }));
+  }
+
+  async function login() {
+    const data = {
+      email: document.getElementById("loginEmail").value,
+      password: document.getElementById("loginPassword").value
+    };
+    show(await api("/auth/login", { method: "POST", body: JSON.stringify(data) }));
+  }
+
+  async function logout() {
+    show(await api("/auth/logout", { method: "POST" }));
+  }
+
+  async function forgotPassword() {
+    const email = document.getElementById("forgotEmail").value;
+    show(await api("/profile/edit/password", { method: "POST", body: JSON.stringify({ email }) }));
+  }
+
+  // Profile
+  async function getProfile() {
+    const result = await api("/profile/view");
+    show(result);
+
+    if (result && result.data) {
+      const p = result.data;
+      document.getElementById("profile").innerHTML = `
+        <div class="card">
+          <img src="${p.photoURL || 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png'}" />
+          <h3>${p.firstName || ''} ${p.lastName || ''}</h3>
+          <p>Email: ${p.email || ''}</p>
+          <p>Age: ${p.age || ''}</p>
+          <p>About: ${p.about || ''}</p>
+          <p>Skills: ${(p.skills || []).join(", ")}</p>
+        </div>
+      `;
+    }
+  }
+
+  async function editProfile() {
+    const data = {
+      fullName: document.getElementById("editName").value,
+      age: parseInt(document.getElementById("editAge").value),
+      about: document.getElementById("editAbout").value,
+      skills: document.getElementById("editSkills").value.split(",").map(s => s.trim())
+    };
+    show(await api("/profile/edit", { method: "PUT", body: JSON.stringify(data) }));
+  }
+
+  // Feed
+  async function getFeed() {
+    const result = await api("/user/feed");
+    show(result);
+
+    if (result && result.data) {
+      document.getElementById("feed").innerHTML = result.data.map(post => `
+        <div class="card">
+          <img src="${post.photoURL}" />
+          <h3>${post.firstName} ${post.lastName}</h3>
+          <p>${post.about}</p>
+          <small>Skills: ${post.skills.join(", ")}</small>
+        </div>
+      `).join("");
+    }
+  }
+
+  // Connection requests
+  async function sendRequest(status) {
+    const targetUserId = document.getElementById("targetUserId").value;
+    if(!targetUserId) return alert("Enter target user ID");
+    show(await api(`/request/send/${status}/${targetUserId}`, { method: "POST", body: JSON.stringify({ targetUserId, status }) }));
+  }
+
+  async function reviewRequest(status) {
+    const requestId = document.getElementById("requestId").value;
+    if(!requestId) return alert("Enter request ID");
+    show(await api(`/request/review/${status}/${requestId}`, { method: "POST", body: JSON.stringify({ requestId, status }) }));
+  }
+
+  async function getConnections() {
+    const result = await api("/user/connections");
+    show(result);
+
+    if (result && result.data) {
+      document.getElementById("connections").innerHTML = result.data.map(user => `
+        <div class="card">
+          <h3>${user.firstName} ${user.lastName}</h3>
+          <p>${user.email || ''}</p>
+        </div>
+      `).join("");
+    }
+  }
+
+async function getIncomingRequests() {
+  try {
+    const res = await api("/user/requests/recieved"); // your endpoint
+    const container = document.getElementById("incomingRequests");
+    console.log(res); // res has { message, data }
+
+    const requests = res.data || []; // unwrap array
+
+    if (!requests.length) {
+      container.innerHTML = "<p>No incoming requests</p>";
+      return;
+    }
+
+    container.innerHTML = requests
+      .map(req => `
+        <div style="border:1px solid #ccc; padding:10px; margin:5px;">
+          <strong>${req.fromUserID.fullName || req.fromUserID.firstName} ${req.fromUserID.lastName || ""}</strong> 
+          (${req.fromUserID.skills?.join(", ") || "No skills"})
+          <p>${req.fromUserID.about || ""}</p>
+          <small>Request ID: ${req._id}</small>
+          <br/>
+          <button onclick="reviewRequestAndRefresh('accepted', '${req.fromUserID._id}')">Accept</button>
+          <button onclick="reviewRequestAndRefresh('rejected', '${req.fromUserID._id}')">Reject</button>
+        </div>
+      `).join("");
+  } catch (err) {
+    console.error(err);
+    alert("Failed to fetch incoming requests");
+  }
+}
+
+// wrapper function to review and refresh
+async function reviewRequestAndRefresh(status, requestId) {
+  await reviewRequest(status, requestId);
+  // refresh the list
+  await getIncomingRequests();
+}
+
+// Updated reviewRequest to accept requestId
+async function reviewRequest(status, requestId) {
+  if (!requestId) {
+    requestId = document.getElementById("requestId").value;
+  }
+  if (!requestId) return alert("Enter request ID");
+  show(await api(`/request/review/${status}/${requestId}`, { method: "POST" }));
+}
+
+</script>
+</body>
+</html>
