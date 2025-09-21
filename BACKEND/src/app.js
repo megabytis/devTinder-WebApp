@@ -38,19 +38,19 @@ app.use(
 
 // ✅ Handle preflight requests for all routes
 // Handle preflight requests for all routes
-app.options("/*", (req, res) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header("Access-Control-Allow-Credentials", true);
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET, PUT, POST, DELETE, PATCH, OPTIONS"
-  );
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, X-Requested-With"
-  );
-  res.sendStatus(200);
-});
+// app.options("/*", (req, res) => {
+//   res.header("Access-Control-Allow-Origin", req.headers.origin);
+//   res.header("Access-Control-Allow-Credentials", true);
+//   res.header(
+//     "Access-Control-Allow-Methods",
+//     "GET, PUT, POST, DELETE, PATCH, OPTIONS"
+//   );
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Content-Type, Authorization, X-Requested-With"
+//   );
+//   res.sendStatus(200);
+// });
 
 // ✅ Force credentials header
 app.use((req, res, next) => {
