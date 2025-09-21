@@ -11,7 +11,7 @@ const SAFE_PROPERTIES_TO_SHOW = [
   "photoURL",
   "skills",
   "about",
-  "age",
+  "age"
 ];
 
 userRouter.get("/user/connections", userAuth, async (req, res, next) => {
