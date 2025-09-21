@@ -11,14 +11,13 @@ const userRouter = require("./routers/user-router");
 
 const app = express();
 
-// Update your allowedOrigins array in app.js
 const allowedOrigins = [
   "https://dev-tinder-web-app-woad.vercel.app",
   "http://localhost:5500",
-  "https://devtinder-webapp.onrender.com", // Add your Render backend URL
+  "https://devtinder-webapp.onrender.com",
 ];
 
-// Update CORS middleware to be more permissive for development
+// ✅ CORS config - UPDATED
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -37,24 +36,14 @@ app.use(
   })
 );
 
-// ✅ Force credentials header
-// Handle preflight requests
-app.options("*", (req, res) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header("Access-Control-Allow-Credentials", true);
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET, PUT, POST, DELETE, PATCH, OPTIONS"
-  );
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, X-Requested-With"
-  );
-  res.sendStatus(200);
-});
+// ✅ Handle preflight requests for all routes
+app.options("*", cors());
 
-// ✅ Handle preflight everywhere
-// app.options("*", cors());
+// ✅ Force credentials header
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
 
 app.use(express.json());
 app.use(cookieParser());
