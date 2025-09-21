@@ -12,7 +12,7 @@ const userAuth = async (req, res, next) => {
     if (!token) {
       throw new Error("Token Not Valid!");
     }
-    const decodedObj = jwt.verify(token, process.env.JWT_SECRET);
+    const decodedObj = jwt.verify(token, "MySecret1234----");
     const { _id } = decodedObj;
 
     // STEP : 3
