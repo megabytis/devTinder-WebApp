@@ -71,8 +71,8 @@ authRouter.post("/auth/login", async (req, res, next) => {
       res.cookie("token", token, {
         httpOnly: true,
         maxAge: 60 * 60 * 1000, // 1 hour
-        sameSite: "lax", // CSRF protection
-        secure: false,
+        sameSite: "none", // CSRF protection
+        secure: true,
       });
 
       res.json({ message: "Login Successful!" });

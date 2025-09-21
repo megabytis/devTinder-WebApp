@@ -7,13 +7,12 @@ const userAuth = async (req, res, next) => {
     // Reading the token from the request Key
     const { token } = req.cookies;
 
-    
     // STEP : 2
     // Validating the Token
     if (!token) {
       throw new Error("Token Not Valid!");
     }
-    const decodedObj = jwt.verify(token, "#MyDevT1nder----");
+    const decodedObj = jwt.verify(token, process.env.JWT_SECRET);
     const { _id } = decodedObj;
 
     // STEP : 3

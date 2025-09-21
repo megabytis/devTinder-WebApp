@@ -118,229 +118,229 @@
     <pre id="output">Waiting...</pre>
 
     <script>
-      const API = "http://localhost:8080";
+        const API = import.meta.env.VITE_API_URL;
 
-      // Core fetch helper
-      async function api(path, options = {}) {
-        try {
-          const res = await fetch(API + path, {
-            credentials: "include", // send cookies
-            headers: {
-              "Content-Type": "application/json",
-              ...(options.headers || {}),
-            },
-            ...options,
-          });
+        // Core fetch helper
+        async function api(path, options = {}) {
+          try {
+            const res = await fetch(API + path, {
+              credentials: "include", // send cookies
+              headers: {
+                "Content-Type": "application/json",
+                ...(options.headers || {}),
+              },
+              ...options,
+            });
 
-          const data = await res.json(); // directly parse JSON
+            const data = await res.json(); // directly parse JSON
 
-          if (!res.ok) {
-            // throw only if status is not 2xx
-            throw {
-              status: res.status,
-              statusText: res.statusText,
-              body: data,
-            };
+            if (!res.ok) {
+              // throw only if status is not 2xx
+              throw {
+                status: res.status,
+                statusText: res.statusText,
+                body: data,
+              };
+            }
+
+            return data; // JSON object
+          } catch (err) {
+            console.error("API error:", err);
+            return { error: true, ...err };
           }
-
-          return data; // JSON object
-        } catch (err) {
-          console.error("API error:", err);
-          return { error: true, ...err };
         }
-      }
 
-      function show(result) {
-        document.getElementById("output").textContent = JSON.stringify(
-          result,
-          null,
-          2
-        );
-      }
-
-      // Auth
-      async function signup() {
-        const data = {
-          email: signupEmail.value,
-          password: signupPassword.value,
-          fullName: signupName.value,
-          age: parseInt(signupAge.value),
-        };
-        show(
-          await api("/auth/sign-up", {
-            method: "POST",
-            body: JSON.stringify(data),
-          })
-        );
-      }
-
-      async function login() {
-        const data = { email: loginEmail.value, password: loginPassword.value };
-        show(
-          await api("/auth/login", {
-            method: "POST",
-            body: JSON.stringify(data),
-          })
-        );
-      }
-
-      async function logout() {
-        show(await api("/auth/logout", { method: "POST" }));
-      }
-
-      async function forgotPassword() {
-        const email = forgotEmail.value;
-        show(
-          await api("/profile/edit/password", {
-            method: "POST",
-            body: JSON.stringify({ email }),
-          })
-        );
-      }
-
-      // Profile
-      async function getProfile() {
-        const res = await api("/profile/view");
-        console.log(res);
-        show(res);
-        if (res?.data) {
-          const p = res.data;
-          profile.innerHTML = `<div class="card">
-      <img src="${
-        p.photoURL ||
-        "https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png"
-      }" />
-      <h3>${p.firstName || ""} ${p.lastName || ""}</h3>
-      <p>Email: ${p.email || ""}</p>
-      <p>Age: ${p.age || ""}</p>
-      <p>About: ${p.about || ""}</p>
-      <p>Skills: ${(p.skills || []).join(", ")}</p>
-    </div>`;
+        function show(result) {
+          document.getElementById("output").textContent = JSON.stringify(
+            result,
+            null,
+            2
+          );
         }
-      }
 
-      async function editProfile() {
-        const data = {
-          fullName: editName.value,
-          age: parseInt(editAge.value),
-          about: editAbout.value,
-          skills: editSkills.value.split(",").map((s) => s.trim()),
-        };
-        show(
-          await api("/profile/edit", {
-            method: "PUT",
-            body: JSON.stringify(data),
-          })
-        );
-      }
+        // Auth
+        async function signup() {
+          const data = {
+            email: signupEmail.value,
+            password: signupPassword.value,
+            fullName: signupName.value,
+            age: parseInt(signupAge.value),
+          };
+          show(
+            await api("/auth/sign-up", {
+              method: "POST",
+              body: JSON.stringify(data),
+            })
+          );
+        }
 
-      async function changePassword() {
-        const data = {
-          oldPassword: oldPassword.value,
-          newPassword: newPassword.value,
-        };
-        show(
-          await api("/profile/edit/password", {
-            method: "PATCH",
-            body: JSON.stringify(data),
-          })
-        );
-      }
+        async function login() {
+          const data = { email: loginEmail.value, password: loginPassword.value };
+          show(
+            await api("/auth/login", {
+              method: "POST",
+              body: JSON.stringify(data),
+            })
+          );
+        }
 
-      // Feed
-      async function getFeed() {
-        const res = await api("/user/feed");
-        show(res);
-        if (res?.data) {
-          feed.innerHTML = res.data
+        async function logout() {
+          show(await api("/auth/logout", { method: "POST" }));
+        }
+
+        async function forgotPassword() {
+          const email = forgotEmail.value;
+          show(
+            await api("/profile/edit/password", {
+              method: "POST",
+              body: JSON.stringify({ email }),
+            })
+          );
+        }
+
+        // Profile
+        async function getProfile() {
+          const res = await api("/profile/view");
+          console.log(res);
+          show(res);
+          if (res?.data) {
+            const p = res.data;
+            profile.innerHTML = `<div class="card">
+        <img src="${
+          p.photoURL ||
+          "https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png"
+        }" />
+        <h3>${p.firstName || ""} ${p.lastName || ""}</h3>
+        <p>Email: ${p.email || ""}</p>
+        <p>Age: ${p.age || ""}</p>
+        <p>About: ${p.about || ""}</p>
+        <p>Skills: ${(p.skills || []).join(", ")}</p>
+      </div>`;
+          }
+        }
+
+        async function editProfile() {
+          const data = {
+            fullName: editName.value,
+            age: parseInt(editAge.value),
+            about: editAbout.value,
+            skills: editSkills.value.split(",").map((s) => s.trim()),
+          };
+          show(
+            await api("/profile/edit", {
+              method: "PUT",
+              body: JSON.stringify(data),
+            })
+          );
+        }
+
+        async function changePassword() {
+          const data = {
+            oldPassword: oldPassword.value,
+            newPassword: newPassword.value,
+          };
+          show(
+            await api("/profile/edit/password", {
+              method: "PATCH",
+              body: JSON.stringify(data),
+            })
+          );
+        }
+
+        // Feed
+        async function getFeed() {
+          const res = await api("/user/feed");
+          show(res);
+          if (res?.data) {
+            feed.innerHTML = res.data
+              .map(
+                (post) => `
+        <div class="card">
+          <img src="${post.photoURL}" />
+          <h3>${post.firstName} ${post.lastName}</h3>
+          <p>${post.about}</p>
+          <small>Skills: ${post.skills.join(", ")}</small>
+        </div>`
+              )
+              .join("");
+          }
+        }
+
+        // Requests
+        async function sendRequest(status) {
+          const targetUserId = targetUserId.value;
+          if (!targetUserId) return alert("Enter Target User ID");
+          show(
+            await api(`/request/send/${status}/${targetUserId}`, {
+              method: "POST",
+            })
+          );
+        }
+
+        async function reviewRequest(status, requestId) {
+          if (!requestId) requestId = requestId.value;
+          if (!requestId) return alert("Enter Request ID");
+          show(
+            await api(`/request/review/${status}/${requestId}`, {
+              method: "POST",
+            })
+          );
+        }
+
+        async function getIncomingRequests() {
+          const res = await api("/user/requests/recieved");
+          const requests = res.data || [];
+          const container = incomingRequests;
+          if (!requests.length) {
+            container.innerHTML = "<p>No incoming requests</p>";
+            return;
+          }
+          container.innerHTML = requests
             .map(
-              (post) => `
+              (req) => `
       <div class="card">
-        <img src="${post.photoURL}" />
-        <h3>${post.firstName} ${post.lastName}</h3>
-        <p>${post.about}</p>
-        <small>Skills: ${post.skills.join(", ")}</small>
+        <strong>${req.fromUserID.fullName || req.fromUserID.firstName} ${
+                req.fromUserID.lastName || ""
+              }</strong>
+        (${req.fromUserID.skills?.join(", ") || "No skills"})
+        <p>${req.fromUserID.about || ""}</p>
+        <small>Request ID: ${req._id}</small><br/>
+        <button onclick="reviewRequestAndRefresh('accepted','${
+          req._id
+        }')">Accept</button>
+        <button onclick="reviewRequestAndRefresh('rejected','${
+          req._id
+        }')">Reject</button>
       </div>`
             )
             .join("");
         }
-      }
 
-      // Requests
-      async function sendRequest(status) {
-        const targetUserId = targetUserId.value;
-        if (!targetUserId) return alert("Enter Target User ID");
-        show(
-          await api(`/request/send/${status}/${targetUserId}`, {
-            method: "POST",
-          })
-        );
-      }
-
-      async function reviewRequest(status, requestId) {
-        if (!requestId) requestId = requestId.value;
-        if (!requestId) return alert("Enter Request ID");
-        show(
-          await api(`/request/review/${status}/${requestId}`, {
-            method: "POST",
-          })
-        );
-      }
-
-      async function getIncomingRequests() {
-        const res = await api("/user/requests/recieved");
-        const requests = res.data || [];
-        const container = incomingRequests;
-        if (!requests.length) {
-          container.innerHTML = "<p>No incoming requests</p>";
-          return;
+        async function reviewRequestAndRefresh(status, requestId) {
+          await reviewRequest(status, requestId);
+          await getIncomingRequests();
         }
-        container.innerHTML = requests
-          .map(
-            (req) => `
-    <div class="card">
-      <strong>${req.fromUserID.fullName || req.fromUserID.firstName} ${
-              req.fromUserID.lastName || ""
-            }</strong>
-      (${req.fromUserID.skills?.join(", ") || "No skills"})
-      <p>${req.fromUserID.about || ""}</p>
-      <small>Request ID: ${req._id}</small><br/>
-      <button onclick="reviewRequestAndRefresh('accepted','${
-        req._id
-      }')">Accept</button>
-      <button onclick="reviewRequestAndRefresh('rejected','${
-        req._id
-      }')">Reject</button>
-    </div>`
-          )
-          .join("");
-      }
 
-      async function reviewRequestAndRefresh(status, requestId) {
-        await reviewRequest(status, requestId);
-        await getIncomingRequests();
-      }
-
-      // Connections
-      async function getConnections() {
-        const res = await api("/user/connections");
-        show(res);
-        console.log(res)
-        if (res?.data) {
-          connections.innerHTML = res.data
-            .map(
-              (u) => `
-      <div class="card">
-        <strong>${u.firstName} ${u.lastName}</strong>
-        <p>${u.email || ""}</p>
-        <img src="${u.photoURL || ""}" />
-        <p>Skills: ${(u.skills || []).join(", ")}</p>
-        <p>About: ${u.about || ""}</p>
-      </div>`
-            )
-            .join("");
+        // Connections
+        async function getConnections() {
+          const res = await api("/user/connections");
+          show(res);
+          console.log(res);
+          if (res?.data) {
+            connections.innerHTML = res.data
+              .map(
+                (u) => `
+        <div class="card">
+          <strong>${u.firstName} ${u.lastName}</strong>
+          <p>${u.email || ""}</p>
+          <img src="${u.photoURL || ""}" />
+          <p>Skills: ${(u.skills || []).join(", ")}</p>
+          <p>About: ${u.about || ""}</p>
+        </div>`
+              )
+              .join("");
+          }
         }
-      }
     </script>
   </body>
 </html>
