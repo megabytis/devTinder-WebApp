@@ -13,7 +13,7 @@ const userRouter = require("./routers/user-router");
 const app = express();
 app.use(
   cors({
-    origin: ["https://dev-tinder-web-app-navy.vercel.app"],
+    origin: ["https://dev-tinder-web-app-woad.vercel.app/"],
     credentials: true,
   })
 );
