@@ -62,10 +62,10 @@ app.use(express.json());
 app.use(cookieParser());
 
 // ✅ Router prefixes
-app.use("/auth", authRouter);
-app.use("/profile", profileRouter);
-app.use("/request", requestRouter);
-app.use("/user", userRouter);
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestRouter);
+app.use("/", userRouter);
 
 // Global error handler
 app.use((err, req, res, next) => {
