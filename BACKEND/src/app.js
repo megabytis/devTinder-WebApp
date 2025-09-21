@@ -11,25 +11,29 @@ const userRouter = require("./routers/user-router");
 
 const app = express();
 
+// Update your allowedOrigins array in app.js
 const allowedOrigins = [
-  "https://dev-tinder-web-app-woad.vercel.app", // your Vercel frontend
-  "http://localhost:5173", // local dev
+  "https://dev-tinder-web-app-woad.vercel.app",
+  "http://localhost:5500",
+  "https://devtinder-webapp.onrender.com", // Add your Render backend URL
 ];
 
-// ✅ CORS config
+// Update CORS middleware to be more permissive for development
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.log("❌ Blocked origin:", origin);
-        callback(new Error("CORS not allowed"));
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps, Postman, etc.)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
+        return callback(new Error(msg), false);
       }
+      return callback(null, true);
     },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
 );
 
