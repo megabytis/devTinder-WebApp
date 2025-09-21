@@ -12,7 +12,7 @@ const userRouter = require("./routers/user-router");
 const app = express();
 
 const allowedOrigins = [
-  "https://dev-tinder-web-app-woad.vercel.app",
+  "https://dev-tinder-web-app-sooty.vercel.app",
   "http://localhost:5500",
   "https://devtinder-webapp.onrender.com",
 ];
