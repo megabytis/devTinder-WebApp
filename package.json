@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "dev": "nodemon BACKEND/src/app.js",
-    "start": "node BACKEND/app.js"
+    "start": "node BACKEND/src/app.js"
   },
   "repository": {
     "type": "git",
