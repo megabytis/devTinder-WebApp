@@ -34,13 +34,22 @@ app.use(
 
 // VERY IMPORTANT: handle preflight OPTIONS globally
 app.options("*", cors());
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+app.use((req, res, next) => {
+  console.log("Incoming origin:", req.headers.origin);
+  next();
+});
+
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/", authRouter);
-app.use("/", profileRouter);
-app.use("/", requestRouter);
-app.use("/", userRouter);
+app.use("/auth", authRouter);
+app.use("/profile", profileRouter);
+app.use("/request", requestRouter);
+app.use("/user", userRouter);
 
 // Global Error Handler middleWare
 app.use((err, req, res, next) => {
