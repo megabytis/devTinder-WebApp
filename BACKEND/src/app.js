@@ -11,14 +11,28 @@ const requestRouter = require("./routers/request-router");
 const userRouter = require("./routers/user-router");
 
 const app = express();
-app.use(cors({
-  origin: "https://dev-tinder-web-app-woad.vercel.app",
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // add OPTIONS
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
+const allowedOrigins = [
+  "https://dev-tinder-web-app-woad.vercel.app", // your vercel frontend
+  "http://localhost:5173", // for local testing
+];
 
-// explicitly respond to OPTIONS
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.log("Blocked origin:", origin);
+        callback(new Error("CORS not allowed"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+// VERY IMPORTANT: handle preflight OPTIONS globally
 app.options("*", cors());
 app.use(express.json());
 app.use(cookieParser());
