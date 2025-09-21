@@ -70,9 +70,9 @@ authRouter.post("/auth/login", async (req, res, next) => {
       // Add the token to Cookie & then send the response back
       res.cookie("token", token, {
         httpOnly: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 1 hour
-        sameSite: "none", // CSRF protection
-        secure: true,
+        secure: true, // Use secure cookies in production
+        sameSite: "none", // Required for cross-origin cookies
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
       });
 
       res.json({ message: "Login Successful!" });
