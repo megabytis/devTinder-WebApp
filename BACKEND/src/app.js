@@ -38,7 +38,7 @@ app.use(
 
 // ✅ Handle preflight requests for all routes
 // Handle preflight requests for all routes
-app.options("*", (req, res) => {
+app.options("/*", (req, res) => {
   res.header("Access-Control-Allow-Origin", req.headers.origin);
   res.header("Access-Control-Allow-Credentials", true);
   res.header(
