@@ -73,6 +73,8 @@ authRouter.post("/auth/login", async (req, res, next) => {
         secure: true, // Use secure cookies in production
         sameSite: "none", // Required for cross-origin cookies
         maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+        domain: ".onrender.com", // Allow cookie to be sent from subdomains
+        path: "/", // Make cookie available for all paths
       });
 
       res.json({ message: "Login Successful!" });
@@ -87,8 +89,10 @@ authRouter.post("/auth/login", async (req, res, next) => {
 authRouter.post("/auth/logout", (req, res, next) => {
   res.clearCookie("token", {
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "none",
     secure: true,
+    domain: ".onrender.com",
+    path: "/",
   });
   res.send("Logout successful!");
 });

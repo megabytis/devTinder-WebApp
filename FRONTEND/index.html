@@ -434,7 +434,7 @@
       async function forgotPassword() {
         const email = forgotEmail.value;
         show(
-          await api("/auth/forgot-password", {
+          await api("/auth/edit/password", {
             method: "POST",
             body: JSON.stringify({ email }),
           })
