@@ -2,62 +2,191 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>DevTinder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DevTinder API Sandbox</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <style>
+      :root {
+        --primary: #4cafef;
+        --primary-dark: #3a8dc8;
+        --dark-bg: #111;
+        --card-bg: #1c1c1c;
+        --section-bg: #1a1a1a;
+        --text: #eee;
+        --border: #444;
+        --success: #2e7d32;
+        --error: #c62828;
+        --warning: #ef6c00;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
       body {
-        font-family: sans-serif;
-        background: #111;
-        color: #eee;
-        padding: 2rem;
-        max-width: 1200px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: var(--dark-bg);
+        color: var(--text);
+        line-height: 1.6;
+        padding: 1rem;
+      }
+
+      .container {
+        max-width: 1400px;
         margin: 0 auto;
       }
-      h1 {
-        color: #4cafef;
+
+      header {
         text-align: center;
         margin-bottom: 2rem;
-      }
-      h2 {
-        margin-top: 2rem;
-        color: #4cafef;
-        border-bottom: 1px solid #444;
-        padding-bottom: 0.5rem;
-      }
-      input,
-      button,
-      textarea {
-        display: block;
-        margin: 0.5rem 0;
-        padding: 0.5rem;
-        border-radius: 5px;
-        border: none;
-        width: 100%;
-        box-sizing: border-box;
-      }
-      button {
-        background: #4cafef;
-        color: #fff;
-        cursor: pointer;
-        transition: background 0.3s;
-      }
-      button:hover {
-        background: #3a8dc8;
-      }
-      pre {
-        background: #222;
         padding: 1rem;
-        border-radius: 5px;
-        overflow-x: auto;
-        white-space: pre-wrap;
-        word-wrap: break-word;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
       }
-      .card {
-        border: 1px solid #444;
-        padding: 1rem;
-        margin: 0.5rem 0;
+
+      h1 {
+        color: var(--primary);
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .tagline {
+        color: #aaa;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+      }
+
+      .status-panel {
+        padding: 0.8rem;
         border-radius: 8px;
-        background: #1c1c1c;
+        margin: 1rem 0;
+        text-align: center;
+        font-weight: 500;
+        transition: all 0.3s ease;
       }
+
+      .success {
+        background: var(--success);
+      }
+
+      .error {
+        background: var(--error);
+      }
+
+      .warning {
+        background: var(--warning);
+      }
+
+      .info {
+        background: #1565c0;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .section {
+        background: var(--section-bg);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease;
+      }
+
+      .section:hover {
+        transform: translateY(-5px);
+      }
+
+      h2 {
+        color: var(--primary);
+        margin-bottom: 1.2rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      h2 i {
+        font-size: 1.3rem;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #ccc;
+      }
+
+      input,
+      textarea,
+      button {
+        width: 100%;
+        padding: 0.8rem;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: #222;
+        color: var(--text);
+        font-family: inherit;
+      }
+
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(76, 175, 239, 0.3);
+      }
+
+      button {
+        background: var(--primary);
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        margin-top: 0.5rem;
+      }
+
+      button:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .btn-group button {
+        flex: 1;
+      }
+
+      .card {
+        background: var(--card-bg);
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 0.8rem 0;
+        border: 1px solid var(--border);
+      }
+
       .card img {
         width: 50px;
         height: 50px;
@@ -65,149 +194,320 @@
         margin-right: 1rem;
         float: left;
       }
+
       .card h3 {
-        margin-top: 0;
+        margin: 0 0 0.5rem 0;
+        color: var(--primary);
       }
-      .section {
-        background: #1a1a1a;
-        padding: 1.5rem;
+
+      .card p {
+        margin: 0.3rem 0;
+        color: #ccc;
+      }
+
+      .result-container {
+        max-height: 300px;
+        overflow-y: auto;
+        margin-top: 1rem;
+        background: #222;
         border-radius: 8px;
-        margin-bottom: 1.5rem;
-        border: 1px solid #333;
-      }
-      .row {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-      }
-      .col {
-        flex: 1;
-        min-width: 300px;
-      }
-      .status {
-        padding: 0.5rem;
-        border-radius: 4px;
-        margin: 0.5rem 0;
-        text-align: center;
-      }
-      .success {
-        background: #2e7d32;
-        color: white;
-      }
-      .error {
-        background: #c62828;
-        color: white;
-      }
-      .warning {
-        background: #ef6c00;
-        color: white;
-      }
-      .debug-panel {
-        background: #2a2a2a;
         padding: 1rem;
-        border-radius: 8px;
-        margin-top: 1.5rem;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .tab-container {
+        margin-top: 2rem;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        overflow-x: auto;
+      }
+
+      .tab {
+        padding: 0.8rem 1.5rem;
+        background: #222;
+        border-radius: 8px 8px 0 0;
+        cursor: pointer;
+        white-space: nowrap;
+        border: 1px solid var(--border);
+        border-bottom: none;
+      }
+
+      .tab.active {
+        background: var(--section-bg);
+        color: var(--primary);
+        font-weight: bold;
+      }
+
+      .tab-content {
+        display: none;
+        background: var(--section-bg);
+        padding: 1.5rem;
+        border-radius: 0 8px 8px 8px;
+        border: 1px solid var(--border);
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      @media (max-width: 768px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .btn-group {
+          flex-direction: column;
+        }
+      }
+
+      /* Loading spinner */
+      .spinner {
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top: 3px solid var(--primary);
+        width: 20px;
+        height: 20px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-right: 10px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
     </style>
   </head>
   <body>
-    <h1>DevTinder API Sandbox 🚀</h1>
-
-    <div id="statusPanel" class="status">Ready to connect...</div>
-
-    <div class="row">
-      <div class="col">
-        <!-- Signup -->
-        <div class="section">
-          <h2>Signup</h2>
-          <input id="signupEmail" placeholder="Email" />
-          <input id="signupPassword" type="password" placeholder="Password" />
-          <input id="signupName" placeholder="Full Name" />
-          <input id="signupAge" type="number" placeholder="Age" />
-          <button onclick="signup()">Sign Up</button>
+    <div class="container">
+      <header>
+        <h1><i class="fas fa-code"></i> DevTinder API Sandbox</h1>
+        <p class="tagline">
+          Test and interact with the DevTinder API endpoints
+        </p>
+        <div id="statusPanel" class="status-panel info">
+          Ready to connect to API...
         </div>
+      </header>
 
-        <!-- Login / Logout -->
-        <div class="section">
-          <h2>Login / Logout</h2>
-          <input id="loginEmail" placeholder="Email" />
-          <input id="loginPassword" type="password" placeholder="Password" />
-          <button onclick="login()">Login</button>
-          <button onclick="logout()">Logout</button>
-        </div>
-
-        <!-- Forgot Password -->
-        <div class="section">
-          <h2>Forgot Password</h2>
-          <input id="forgotEmail" placeholder="Email" />
-          <button onclick="forgotPassword()">Send Reset Link</button>
-        </div>
-
-        <!-- Profile -->
-        <div class="section">
-          <h2>Profile</h2>
-          <button onclick="getProfile()">Get Profile</button>
-          <div id="profile"></div>
-        </div>
+      <div class="tabs">
+        <div class="tab active" data-tab="auth">Authentication</div>
+        <div class="tab" data-tab="profile">Profile</div>
+        <div class="tab" data-tab="connections">Connections</div>
+        <div class="tab" data-tab="feed">Feed</div>
       </div>
 
-      <div class="col">
-        <!-- Edit Profile -->
-        <div class="section">
-          <h2>Edit Profile</h2>
-          <input id="editName" placeholder="Full Name" />
-          <input id="editAge" type="number" placeholder="Age" />
-          <textarea id="editAbout" placeholder="About"></textarea>
-          <input id="editSkills" placeholder="Skills (comma separated)" />
-          <button onclick="editProfile()">Update Profile</button>
+      <div class="tab-container">
+        <!-- Authentication Tab -->
+        <div class="tab-content active" id="auth-tab">
+          <div class="grid">
+            <div class="section">
+              <h2><i class="fas fa-user-plus"></i> Sign Up</h2>
+              <div class="form-group">
+                <label for="signupEmail">Email</label>
+                <input
+                  id="signupEmail"
+                  type="email"
+                  placeholder="Enter your email"
+                />
+              </div>
+              <div class="form-group">
+                <label for="signupPassword">Password</label>
+                <input
+                  id="signupPassword"
+                  type="password"
+                  placeholder="Create a password"
+                />
+              </div>
+              <div class="form-group">
+                <label for="signupName">Full Name</label>
+                <input id="signupName" placeholder="Your full name" />
+              </div>
+              <div class="form-group">
+                <label for="signupAge">Age</label>
+                <input id="signupAge" type="number" placeholder="Your age" />
+              </div>
+              <button onclick="signup()">
+                <i class="fas fa-user-plus"></i> Sign Up
+              </button>
+            </div>
+
+            <div class="section">
+              <h2><i class="fas fa-sign-in-alt"></i> Login</h2>
+              <div class="form-group">
+                <label for="loginEmail">Email</label>
+                <input id="loginEmail" type="email" placeholder="Your email" />
+              </div>
+              <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input
+                  id="loginPassword"
+                  type="password"
+                  placeholder="Your password"
+                />
+              </div>
+              <button onclick="login()">
+                <i class="fas fa-sign-in-alt"></i> Login
+              </button>
+              <button onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </button>
+            </div>
+
+            <div class="section">
+              <h2><i class="fas fa-key"></i> Password Management</h2>
+              <div class="form-group">
+                <label for="forgotEmail">Forgot Password</label>
+                <input
+                  id="forgotEmail"
+                  type="email"
+                  placeholder="Enter your email"
+                />
+              </div>
+              <button onclick="forgotPassword()">
+                <i class="fas fa-paper-plane"></i> Send Reset Link
+              </button>
+
+              <div class="form-group" style="margin-top: 1.5rem">
+                <label for="oldPassword">Change Password</label>
+                <input
+                  id="oldPassword"
+                  type="password"
+                  placeholder="Current password"
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  id="newPassword"
+                  type="password"
+                  placeholder="New password"
+                />
+              </div>
+              <button onclick="changePassword()">
+                <i class="fas fa-exchange-alt"></i> Change Password
+              </button>
+            </div>
+          </div>
         </div>
 
-        <!-- Change Password -->
-        <div class="section">
-          <h2>Change Password</h2>
-          <input id="oldPassword" type="password" placeholder="Old Password" />
-          <input id="newPassword" type="password" placeholder="New Password" />
-          <button onclick="changePassword()">Change Password</button>
+        <!-- Profile Tab -->
+        <div class="tab-content" id="profile-tab">
+          <div class="grid">
+            <div class="section">
+              <h2><i class="fas fa-user"></i> View Profile</h2>
+              <button onclick="getProfile()">
+                <i class="fas fa-sync"></i> Get Profile
+              </button>
+              <div id="profile" class="result-container"></div>
+            </div>
+
+            <div class="section">
+              <h2><i class="fas fa-edit"></i> Edit Profile</h2>
+              <div class="form-group">
+                <label for="editName">Full Name</label>
+                <input id="editName" placeholder="Your full name" />
+              </div>
+              <div class="form-group">
+                <label for="editAge">Age</label>
+                <input id="editAge" type="number" placeholder="Your age" />
+              </div>
+              <div class="form-group">
+                <label for="editAbout">About</label>
+                <textarea
+                  id="editAbout"
+                  placeholder="Tell others about yourself"
+                  rows="3"
+                ></textarea>
+              </div>
+              <div class="form-group">
+                <label for="editSkills">Skills (comma separated)</label>
+                <input
+                  id="editSkills"
+                  placeholder="e.g. JavaScript, React, Node.js"
+                />
+              </div>
+              <button onclick="editProfile()">
+                <i class="fas fa-save"></i> Update Profile
+              </button>
+            </div>
+          </div>
         </div>
 
-        <!-- Feed -->
-        <div class="section">
-          <h2>Feed</h2>
-          <button onclick="getFeed()">Get Feed</button>
-          <div id="feed"></div>
-        </div>
-      </div>
-    </div>
+        <!-- Connections Tab -->
+        <div class="tab-content" id="connections-tab">
+          <div class="grid">
+            <div class="section">
+              <h2>
+                <i class="fas fa-paper-plane"></i> Send Connection Request
+              </h2>
+              <div class="form-group">
+                <label for="targetUserId">Target User ID</label>
+                <input id="targetUserId" placeholder="Enter user ID" />
+              </div>
+              <div class="btn-group">
+                <button onclick="sendRequest('interested')">
+                  <i class="fas fa-heart"></i> Interested
+                </button>
+                <button onclick="sendRequest('ignored')">
+                  <i class="fas fa-times"></i> Ignore
+                </button>
+              </div>
+            </div>
 
-    <div class="row">
-      <div class="col">
-        <!-- Connection Requests -->
-        <div class="section">
-          <h2>Send Connection Requests</h2>
-          <input id="targetUserId" placeholder="Target User ID" />
-          <button onclick="sendRequest('interested')">Send Interested</button>
-          <button onclick="sendRequest('ignored')">Send Ignored</button>
+            <div class="section">
+              <h2><i class="fas fa-envelope"></i> Incoming Requests</h2>
+              <button onclick="getIncomingRequests()">
+                <i class="fas fa-sync"></i> Get Incoming Requests
+              </button>
+              <div id="incomingRequests" class="result-container"></div>
+            </div>
+
+            <div class="section">
+              <h2><i class="fas fa-users"></i> My Connections</h2>
+              <button onclick="getConnections()">
+                <i class="fas fa-sync"></i> Get Connections
+              </button>
+              <div id="connections" class="result-container"></div>
+            </div>
+
+            <div class="section">
+              <h2><i class="fas fa-tasks"></i> Review Requests</h2>
+              <div class="form-group">
+                <label for="requestId">Request ID</label>
+                <input id="requestId" placeholder="Enter request ID" />
+              </div>
+              <div class="btn-group">
+                <button onclick="reviewRequest('accepted')">
+                  <i class="fas fa-check"></i> Accept
+                </button>
+                <button onclick="reviewRequest('rejected')">
+                  <i class="fas fa-times"></i> Reject
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="section">
-          <h2>Review Requests</h2>
-          <input id="requestId" placeholder="Request ID" />
-          <button onclick="reviewRequest('accepted')">Accept</button>
-          <button onclick="reviewRequest('rejected')">Reject</button>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="section">
-          <h2>Incoming Requests</h2>
-          <button onclick="getIncomingRequests()">Get Incoming Requests</button>
-          <div id="incomingRequests"></div>
-        </div>
-
-        <div class="section">
-          <h2>My Connections</h2>
-          <button onclick="getConnections()">Get Connections</button>
-          <div id="connections"></div>
+        <!-- Feed Tab -->
+        <div class="tab-content" id="feed-tab">
+          <div class="section">
+            <h2><i class="fas fa-rss"></i> Developer Feed</h2>
+            <button onclick="getFeed()">
+              <i class="fas fa-sync"></i> Get Feed
+            </button>
+            <div id="feed" class="result-container"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -216,11 +516,30 @@
       const API = "https://devtinder-webapp.onrender.com";
       let authChecked = false;
 
+      // Tab functionality
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          // Remove active class from all tabs and content
+          document
+            .querySelectorAll(".tab")
+            .forEach((t) => t.classList.remove("active"));
+          document
+            .querySelectorAll(".tab-content")
+            .forEach((c) => c.classList.remove("active"));
+
+          // Add active class to clicked tab and corresponding content
+          tab.classList.add("active");
+          document
+            .getElementById(`${tab.dataset.tab}-tab`)
+            .classList.add("active");
+        });
+      });
+
       // Update status panel
-      function updateStatus(message, type = "") {
+      function updateStatus(message, type = "info") {
         const statusPanel = document.getElementById("statusPanel");
         statusPanel.textContent = message;
-        statusPanel.className = "status";
+        statusPanel.className = "status-panel";
         if (type) {
           statusPanel.classList.add(type);
         }
@@ -240,7 +559,6 @@
           };
 
           const res = await fetch(API + path, config);
-          console.log("Response status:", res.status, res.statusText);
 
           // Check if response is JSON
           const contentType = res.headers.get("content-type");
@@ -265,7 +583,6 @@
         } catch (err) {
           console.error("API error:", err);
           updateStatus(`Error: ${err.message || "Network error"}`, "error");
-
           return {
             error: true,
             message: err.message || "Network error",
@@ -274,167 +591,109 @@
         }
       }
 
-      // Fallback method using a proxy for CORS issues
-      // async function apiWithProxy(path, options = {}) {
-      //   // You can set up a CORS proxy service if needed
-      //   // For example: https://cors-anywhere.herokuapp.com/
-      //   const PROXY_URL = ""; // Leave empty if you don't have a proxy
-
-      //   if (!PROXY_URL) {
-      //     return { error: true, message: "CORS error and no proxy configured" };
-      //   }
-
-      //   try {
-      //     const res = await fetch(PROXY_URL + API + path, {
-      //       headers: {
-      //         "Content-Type": "application/json",
-      //         ...(options.headers || {}),
-      //       },
-      //       ...options,
-      //     });
-
-      //     const data = await res.json();
-
-      //     if (!res.ok) {
-      //       throw {
-      //         status: res.status,
-      //         statusText: res.statusText,
-      //         body: data,
-      //       };
-      //     }
-
-      //     return data;
-      //   } catch (err) {
-      //     console.error("Proxy API error:", err);
-      //     return {
-      //       error: true,
-      //       message: err.message || "Proxy network error",
-      //       details: err,
-      //     };
-      //   }
-      // }
-
-      function show(result) {
-        document.getElementById("output").textContent = JSON.stringify(
-          result,
-          null,
-          2
-        );
-      }
-
-      // Debug functions
-      async function debugCookies() {
-        console.log("Cookies:", document.cookie);
-        show({ cookies: document.cookie });
-      }
-
       // Auth functions
       async function signup() {
         const data = {
-          email: signupEmail.value,
-          password: signupPassword.value,
-          fullName: signupName.value,
-          age: parseInt(signupAge.value),
+          email: document.getElementById("signupEmail").value,
+          password: document.getElementById("signupPassword").value,
+          fullName: document.getElementById("signupName").value,
+          age: parseInt(document.getElementById("signupAge").value),
         };
-        show(
-          await api("/auth/sign-up", {
-            method: "POST",
-            body: JSON.stringify(data),
-          })
-        );
+        await api("/auth/sign-up", {
+          method: "POST",
+          body: JSON.stringify(data),
+        });
       }
 
       async function login() {
-        const data = { email: loginEmail.value, password: loginPassword.value };
+        const data = {
+          email: document.getElementById("loginEmail").value,
+          password: document.getElementById("loginPassword").value,
+        };
         const result = await api("/auth/login", {
           method: "POST",
           body: JSON.stringify(data),
         });
-        show(result);
 
         // If login successful, check auth status
         if (result && !result.error) {
-          setTimeout(debugAuth, 1000);
+          updateStatus("Login successful!", "success");
         }
       }
 
       async function logout() {
-        show(await api("/auth/logout", { method: "POST" }));
+        await api("/auth/logout", { method: "POST" });
+        updateStatus("Logged out successfully", "info");
       }
 
       async function forgotPassword() {
-        const email = forgotEmail.value;
-        show(
-          await api("/auth/edit/password", {
-            method: "POST",
-            body: JSON.stringify({ email }),
-          })
-        );
+        const email = document.getElementById("forgotEmail").value;
+        await api("/auth/edit/password", {
+          method: "POST",
+          body: JSON.stringify({ email }),
+        });
       }
 
       // Profile functions
       async function getProfile() {
         const res = await api("/profile/view");
-        console.log(res);
-        show(res);
         if (res?.data) {
           const p = res.data;
-          profile.innerHTML = `<div class="card">
-        <img src="${
-          p.photoURL ||
-          "https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png"
-        }" />
-        <h3>${p.firstName || ""} ${p.lastName || ""}</h3>
-        <p>Email: ${p.email || ""}</p>
-        <p>Age: ${p.age || ""}</p>
-        <p>About: ${p.about || ""}</p>
-        <p>Skills: ${(p.skills || []).join(", ")}</p>
-      </div>`;
+          document.getElementById("profile").innerHTML = `
+            <div class="card">
+              <img src="${
+                p.photoURL ||
+                "https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png"
+              }" />
+              <h3>${p.firstName || ""} ${p.lastName || ""}</h3>
+              <p>Email: ${p.email || ""}</p>
+              <p>Age: ${p.age || ""}</p>
+              <p>About: ${p.about || ""}</p>
+              <p>Skills: ${(p.skills || []).join(", ")}</p>
+            </div>`;
         }
       }
 
       async function editProfile() {
         const data = {
-          fullName: editName.value,
-          age: parseInt(editAge.value),
-          about: editAbout.value,
-          skills: editSkills.value.split(",").map((s) => s.trim()),
+          fullName: document.getElementById("editName").value,
+          age: parseInt(document.getElementById("editAge").value),
+          about: document.getElementById("editAbout").value,
+          skills: document
+            .getElementById("editSkills")
+            .value.split(",")
+            .map((s) => s.trim()),
         };
-        show(
-          await api("/profile/edit", {
-            method: "PUT",
-            body: JSON.stringify(data),
-          })
-        );
+        await api("/profile/edit", {
+          method: "PUT",
+          body: JSON.stringify(data),
+        });
       }
 
       async function changePassword() {
         const data = {
-          oldPassword: oldPassword.value,
-          newPassword: newPassword.value,
+          oldPassword: document.getElementById("oldPassword").value,
+          newPassword: document.getElementById("newPassword").value,
         };
-        show(
-          await api("/profile/edit/password", {
-            method: "PATCH",
-            body: JSON.stringify(data),
-          })
-        );
+        await api("/profile/edit/password", {
+          method: "PATCH",
+          body: JSON.stringify(data),
+        });
       }
 
       // Feed
       async function getFeed() {
         const res = await api("/user/feed");
-        show(res);
         if (res?.data) {
-          feed.innerHTML = res.data
+          document.getElementById("feed").innerHTML = res.data
             .map(
               (post) => `
-        <div class="card">
-          <img src="${post.photoURL}" />
-          <h3>${post.firstName} ${post.lastName}</h3>
-          <p>${post.about}</p>
-          <small>Skills: ${post.skills.join(", ")}</small>
-        </div>`
+                <div class="card">
+                  <img src="${post.photoURL}" />
+                  <h3>${post.firstName} ${post.lastName}</h3>
+                  <p>${post.about}</p>
+                  <small>Skills: ${post.skills.join(", ")}</small>
+                </div>`
             )
             .join("");
         }
@@ -442,50 +701,56 @@
 
       // Requests
       async function sendRequest(status) {
-        const targetUserId = targetUserId.value;
-        if (!targetUserId) return alert("Enter Target User ID");
-        show(
-          await api(`/request/send/${status}/${targetUserId}`, {
-            method: "POST",
-          })
-        );
+        const targetUserId = document.getElementById("targetUserId").value;
+        if (!targetUserId) {
+          updateStatus("Please enter a Target User ID", "error");
+          return;
+        }
+        await api(`/request/send/${status}/${targetUserId}`, {
+          method: "POST",
+        });
       }
 
       async function reviewRequest(status) {
         const requestId = document.getElementById("requestId").value;
-        if (!requestId) return alert("Enter Request ID");
-        show(
-          await api(`/request/review/${status}/${requestId}`, {
-            method: "POST",
-          })
-        );
+        if (!requestId) {
+          updateStatus("Please enter a Request ID", "error");
+          return;
+        }
+        await api(`/request/review/${status}/${requestId}`, {
+          method: "POST",
+        });
       }
 
       async function getIncomingRequests() {
         const res = await api("/user/requests/received");
         const requests = res.data || [];
         const container = document.getElementById("incomingRequests");
+
         if (!requests.length) {
           container.innerHTML = "<p>No incoming requests</p>";
           return;
         }
+
         container.innerHTML = requests
           .map(
             (req) => `
-      <div class="card">
-        <strong>${req.fromUserID.fullName || req.fromUserID.firstName} ${
-              req.fromUserID.lastName || ""
-            }</strong>
-        (${req.fromUserID.skills?.join(", ") || "No skills"})
-        <p>${req.fromUserID.about || ""}</p>
-        <small>Request ID: ${req._id}</small><br/>
-        <button onclick="reviewRequestAndRefresh('accepted','${
-          req._id
-        }')">Accept</button>
-        <button onclick="reviewRequestAndRefresh('rejected','${
-          req._id
-        }')">Reject</button>
-      </div>`
+              <div class="card">
+                <strong>${
+                  req.fromUserID.fullName || req.fromUserID.firstName
+                } ${req.fromUserID.lastName || ""}</strong>
+                (${req.fromUserID.skills?.join(", ") || "No skills"})
+                <p>${req.fromUserID.about || ""}</p>
+                <small>Request ID: ${req._id}</small><br/>
+                <div class="btn-group">
+                  <button onclick="reviewRequestAndRefresh('accepted','${
+                    req._id
+                  }')">Accept</button>
+                  <button onclick="reviewRequestAndRefresh('rejected','${
+                    req._id
+                  }')">Reject</button>
+                </div>
+              </div>`
           )
           .join("");
       }
@@ -499,19 +764,20 @@
       // Connections
       async function getConnections() {
         const res = await api("/user/connections");
-        show(res);
-        console.log(res);
         if (res?.data) {
           document.getElementById("connections").innerHTML = res.data
             .map(
               (u) => `
-        <div class="card">
-          <strong>${u.firstName} ${u.lastName}</strong>
-          <p>${u.email || ""}</p>
-          <img src="${u.photoURL || ""}" />
-          <p>Skills: ${(u.skills || []).join(", ")}</p>
-          <p>About: ${u.about || ""}</p>
-        </div>`
+                <div class="card">
+                  <img src="${
+                    u.photoURL ||
+                    "https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png"
+                  }" />
+                  <strong>${u.firstName} ${u.lastName}</strong>
+                  <p>${u.email || ""}</p>
+                  <p>Skills: ${(u.skills || []).join(", ")}</p>
+                  <p>About: ${u.about || ""}</p>
+                </div>`
             )
             .join("");
         }
@@ -519,4 +785,3 @@
     </script>
   </body>
 </html>
-<!-- v2 -->
