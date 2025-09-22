@@ -922,22 +922,27 @@
       }
 
       async function editProfile() {
-        const data = {
-          firstName: document.getElementById("editFirstName").value,
-          lastName: document.getElementById("editLastName").value,
-          age: parseInt(document.getElementById("editAge").value),
-          about: document.getElementById("editAbout").value,
-          skills: document
-            .getElementById("editSkills")
-            .value.split(",")
-            .map((s) => s.trim()),
-          gender: document.getElementById("editGender").value,
-        };
+        const data = {};
 
-        // Add optional photo URL if provided
-        const photoURL = document.getElementById("editPhotoURL").value;
-        if (photoURL) {
-          data.photoURL = photoURL;
+        const firstName = document.getElementById("editFirstName").value.trim();
+        const lastName = document.getElementById("editLastName").value.trim();
+        const age = document.getElementById("editAge").value.trim();
+        const about = document.getElementById("editAbout").value.trim();
+        const skills = document.getElementById("editSkills").value.trim();
+        const gender = document.getElementById("editGender").value;
+        const photoURL = document.getElementById("editPhotoURL").value.trim();
+
+        if (firstName) data.firstName = firstName;
+        if (lastName) data.lastName = lastName;
+        if (age) data.age = parseInt(age);
+        if (about) data.about = about;
+        if (skills) data.skills = skills.split(",").map((s) => s.trim());
+        if (gender) data.gender = gender;
+        if (photoURL) data.photoURL = photoURL;
+
+        if (Object.keys(data).length === 0) {
+          updateStatus("No fields to update.", "warning");
+          return;
         }
 
         const result = await api("/profile/edit", {
