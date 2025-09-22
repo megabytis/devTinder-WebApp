@@ -11,13 +11,6 @@ const userRouter = require("./routers/user-router");
 
 const app = express();
 
-// const allowedOrigins = [
-//   "https://dev-tinder-web-app-woad.vercel.app",
-//   "http://localhost:5500",
-//   "https://devtinder-webapp.onrender.com",
-// ];
-
-// ✅ CORS config - UPDATED
 app.use(
   cors({
     origin: ["https://dev-tinder-web-app-six.vercel.app"],
@@ -26,15 +19,6 @@ app.use(
     // allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
 );
-
-// ✅ Handle preflight requests for all routes
-// app.options("*", cors());
-
-// ✅ Force credentials header
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Credentials", "true");
-//   next();
-// });
 
 app.use(express.json());
 app.use(cookieParser());

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>DevTinder Sandbox - Fixed CORS</title>
+    <title>DevTinder</title>
     <style>
       body {
         font-family: sans-serif;
@@ -212,17 +212,6 @@
       </div>
     </div>
 
-    <!-- Debug -->
-    <div class="debug-panel">
-      <h2>Debug Tools</h2>
-      <button onclick="debugCookies()">Check Cookies</button>
-      <button onclick="debugAuth()">Check Auth Status</button>
-      <button onclick="testCORS()">Test CORS Connection</button>
-
-      <h2>Raw Result (debug)</h2>
-      <pre id="output">Waiting...</pre>
-    </div>
-
     <script>
       const API = "https://devtinder-webapp.onrender.com";
       let authChecked = false;
@@ -237,12 +226,10 @@
         }
       }
 
-      // Core fetch helper with enhanced CORS handling
       async function api(path, options = {}) {
         updateStatus(`Calling: ${path}`, "warning");
 
         try {
-          // Ensure we include credentials for CORS
           const config = {
             credentials: "include",
             headers: {
@@ -251,24 +238,6 @@
             },
             ...options,
           };
-
-          // For preflight handling, we might need to try both with and without credentials
-          // in case the server isn't configured for credentialed requests
-          // if (path === "/auth/check" || path === "/profile/view") {
-          //   // Try without credentials first for preflight
-          //   try {
-          //     const testRes = await fetch(API + path, {
-          //       method: "OPTIONS",
-          //       headers: {
-          //         "Access-Control-Request-Method": options.method || "GET",
-          //         "Access-Control-Request-Headers": "Content-Type",
-          //       },
-          //     });
-          //     console.log("Preflight test:", testRes);
-          //   } catch (e) {
-          //     console.log("Preflight test failed, continuing anyway:", e);
-          //   }
-          // }
 
           const res = await fetch(API + path, config);
           console.log("Response status:", res.status, res.statusText);
@@ -297,18 +266,6 @@
           console.error("API error:", err);
           updateStatus(`Error: ${err.message || "Network error"}`, "error");
 
-          // If it's a CORS error, try a proxy approach
-          if (
-            (err.message && err.message.includes("CORS")) ||
-            (err.message && err.message.includes("Failed to fetch"))
-          ) {
-            updateStatus(
-              "CORS error detected. Trying fallback method...",
-              "warning"
-            );
-            return await apiWithProxy(path, options);
-          }
-
           return {
             error: true,
             message: err.message || "Network error",
@@ -318,44 +275,44 @@
       }
 
       // Fallback method using a proxy for CORS issues
-      async function apiWithProxy(path, options = {}) {
-        // You can set up a CORS proxy service if needed
-        // For example: https://cors-anywhere.herokuapp.com/
-        const PROXY_URL = ""; // Leave empty if you don't have a proxy
+      // async function apiWithProxy(path, options = {}) {
+      //   // You can set up a CORS proxy service if needed
+      //   // For example: https://cors-anywhere.herokuapp.com/
+      //   const PROXY_URL = ""; // Leave empty if you don't have a proxy
 
-        if (!PROXY_URL) {
-          return { error: true, message: "CORS error and no proxy configured" };
-        }
+      //   if (!PROXY_URL) {
+      //     return { error: true, message: "CORS error and no proxy configured" };
+      //   }
 
-        try {
-          const res = await fetch(PROXY_URL + API + path, {
-            headers: {
-              "Content-Type": "application/json",
-              ...(options.headers || {}),
-            },
-            ...options,
-          });
+      //   try {
+      //     const res = await fetch(PROXY_URL + API + path, {
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //         ...(options.headers || {}),
+      //       },
+      //       ...options,
+      //     });
 
-          const data = await res.json();
+      //     const data = await res.json();
 
-          if (!res.ok) {
-            throw {
-              status: res.status,
-              statusText: res.statusText,
-              body: data,
-            };
-          }
+      //     if (!res.ok) {
+      //       throw {
+      //         status: res.status,
+      //         statusText: res.statusText,
+      //         body: data,
+      //       };
+      //     }
 
-          return data;
-        } catch (err) {
-          console.error("Proxy API error:", err);
-          return {
-            error: true,
-            message: err.message || "Proxy network error",
-            details: err,
-          };
-        }
-      }
+      //     return data;
+      //   } catch (err) {
+      //     console.error("Proxy API error:", err);
+      //     return {
+      //       error: true,
+      //       message: err.message || "Proxy network error",
+      //       details: err,
+      //     };
+      //   }
+      // }
 
       function show(result) {
         document.getElementById("output").textContent = JSON.stringify(
@@ -370,32 +327,6 @@
         console.log("Cookies:", document.cookie);
         show({ cookies: document.cookie });
       }
-
-      // async function debugAuth() {
-      //   const result = await api("/auth/check");
-      //   show(result);
-      //   return result && result.authenticated;
-      // }
-
-      // Test CORS connection
-      // async function testCORS() {
-      //   try {
-      //     const response = await fetch(
-      //       "https://devtinder-webapp.onrender.com/auth/check",
-      //       {
-      //         method: "OPTIONS",
-      //         headers: {
-      //           Origin: "https://dev-tinder-web-app-sooty.vercel.app",
-      //           "Access-Control-Request-Method": "GET",
-      //           "Access-Control-Request-Headers": "Content-Type",
-      //         },
-      //       }
-      //     );
-      //     console.log("CORS test response:", response);
-      //   } catch (error) {
-      //     console.error("CORS test failed:", error);
-      //   }
-      // }
 
       // Auth functions
       async function signup() {
