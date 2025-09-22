@@ -371,31 +371,31 @@
         show({ cookies: document.cookie });
       }
 
-      async function debugAuth() {
-        const result = await api("/auth/check");
-        show(result);
-        return result && result.authenticated;
-      }
+      // async function debugAuth() {
+      //   const result = await api("/auth/check");
+      //   show(result);
+      //   return result && result.authenticated;
+      // }
 
       // Test CORS connection
-      async function testCORS() {
-        try {
-          const response = await fetch(
-            "https://devtinder-webapp.onrender.com/auth/check",
-            {
-              method: "OPTIONS",
-              headers: {
-                Origin: "https://dev-tinder-web-app-sooty.vercel.app",
-                "Access-Control-Request-Method": "GET",
-                "Access-Control-Request-Headers": "Content-Type",
-              },
-            }
-          );
-          console.log("CORS test response:", response);
-        } catch (error) {
-          console.error("CORS test failed:", error);
-        }
-      }
+      // async function testCORS() {
+      //   try {
+      //     const response = await fetch(
+      //       "https://devtinder-webapp.onrender.com/auth/check",
+      //       {
+      //         method: "OPTIONS",
+      //         headers: {
+      //           Origin: "https://dev-tinder-web-app-sooty.vercel.app",
+      //           "Access-Control-Request-Method": "GET",
+      //           "Access-Control-Request-Headers": "Content-Type",
+      //         },
+      //       }
+      //     );
+      //     console.log("CORS test response:", response);
+      //   } catch (error) {
+      //     console.error("CORS test failed:", error);
+      //   }
+      // }
 
       // Auth functions
       async function signup() {
