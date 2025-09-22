@@ -254,21 +254,21 @@
 
           // For preflight handling, we might need to try both with and without credentials
           // in case the server isn't configured for credentialed requests
-          if (path === "/auth/check" || path === "/profile/view") {
-            // Try without credentials first for preflight
-            try {
-              const testRes = await fetch(API + path, {
-                method: "OPTIONS",
-                headers: {
-                  "Access-Control-Request-Method": options.method || "GET",
-                  "Access-Control-Request-Headers": "Content-Type",
-                },
-              });
-              console.log("Preflight test:", testRes);
-            } catch (e) {
-              console.log("Preflight test failed, continuing anyway:", e);
-            }
-          }
+          // if (path === "/auth/check" || path === "/profile/view") {
+          //   // Try without credentials first for preflight
+          //   try {
+          //     const testRes = await fetch(API + path, {
+          //       method: "OPTIONS",
+          //       headers: {
+          //         "Access-Control-Request-Method": options.method || "GET",
+          //         "Access-Control-Request-Headers": "Content-Type",
+          //       },
+          //     });
+          //     console.log("Preflight test:", testRes);
+          //   } catch (e) {
+          //     console.log("Preflight test failed, continuing anyway:", e);
+          //   }
+          // }
 
           const res = await fetch(API + path, config);
           console.log("Response status:", res.status, res.statusText);
