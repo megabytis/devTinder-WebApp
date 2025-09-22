@@ -157,7 +157,8 @@
 
       input,
       textarea,
-      button {
+      button,
+      select {
         width: 100%;
         padding: 0.8rem;
         border-radius: 8px;
@@ -168,7 +169,8 @@
       }
 
       input:focus,
-      textarea:focus {
+      textarea:focus,
+      select:focus {
         outline: none;
         border-color: var(--primary);
         box-shadow: 0 0 0 2px rgba(76, 175, 239, 0.3);
@@ -342,6 +344,18 @@
         font-size: 0.9rem;
       }
 
+      .password-info {
+        background: #2d3748;
+        padding: 0.8rem;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+      }
+
+      .password-info ul {
+        margin: 0.5rem 0 0 1rem;
+      }
+
       @media (max-width: 1200px) {
         .container {
           flex-direction: column;
@@ -418,32 +432,75 @@
               <div class="section">
                 <h2><i class="fas fa-user-plus"></i> Sign Up</h2>
                 <div class="form-group">
-                  <label for="signupEmail">Email</label>
+                  <label for="signupFirstName">First Name *</label>
+                  <input
+                    id="signupFirstName"
+                    placeholder="Enter your first name"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="signupLastName">Last Name *</label>
+                  <input
+                    id="signupLastName"
+                    placeholder="Enter your last name"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="signupEmail">Email *</label>
                   <input
                     id="signupEmail"
                     type="email"
                     placeholder="Enter your email"
+                    required
                   />
                 </div>
                 <div class="form-group">
-                  <label for="signupPassword">Password</label>
+                  <label for="signupPassword">Password *</label>
                   <input
                     id="signupPassword"
                     type="password"
-                    placeholder="Create a password"
+                    placeholder="Create a strong password"
+                    required
+                  />
+                  <div class="password-info">
+                    <p>Password must include:</p>
+                    <ul>
+                      <li>Minimum 8 characters</li>
+                      <li>At least 1 uppercase letter</li>
+                      <li>At least 1 lowercase letter</li>
+                      <li>At least 1 number</li>
+                      <li>At least 1 symbol</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="signupAge">Age *</label>
+                  <input
+                    id="signupAge"
+                    type="number"
+                    min="18"
+                    placeholder="Your age (must be 18+)"
+                    required
                   />
                 </div>
                 <div class="form-group">
-                  <label for="signupFirstName">First Name</label>
-                  <input id="signupFirstName" placeholder="Your first name" />
+                  <label for="signupGender">Gender *</label>
+                  <select id="signupGender" required>
+                    <option value="">Select your gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
                 </div>
                 <div class="form-group">
-                  <label for="signupLastName">Last Name</label>
-                  <input id="signupLastName" placeholder="Your last name" />
-                </div>
-                <div class="form-group">
-                  <label for="signupAge">Age</label>
-                  <input id="signupAge" type="number" placeholder="Your age" />
+                  <label for="signupPhotoURL">Photo URL</label>
+                  <input
+                    id="signupPhotoURL"
+                    type="url"
+                    placeholder="https://example.com/photo.jpg"
+                  />
                 </div>
                 <button onclick="signup()">
                   <i class="fas fa-user-plus"></i> Sign Up
@@ -534,7 +591,21 @@
                 </div>
                 <div class="form-group">
                   <label for="editAge">Age</label>
-                  <input id="editAge" type="number" placeholder="Your age" />
+                  <input
+                    id="editAge"
+                    type="number"
+                    min="18"
+                    placeholder="Your age"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="editGender">Gender</label>
+                  <select id="editGender">
+                    <option value="">Select your gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
                 </div>
                 <div class="form-group">
                   <label for="editAbout">About</label>
@@ -549,6 +620,14 @@
                   <input
                     id="editSkills"
                     placeholder="e.g. JavaScript, React, Node.js"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="editPhotoURL">Photo URL</label>
+                  <input
+                    id="editPhotoURL"
+                    type="url"
+                    placeholder="https://example.com/photo.jpg"
                   />
                 </div>
                 <button onclick="editProfile()">
@@ -713,6 +792,10 @@
                 <p>${data.age || "Not specified"}</p>
               </div>
               <div class="detail-item">
+                <h4>Gender</h4>
+                <p>${data.gender || "Not specified"}</p>
+              </div>
+              <div class="detail-item">
                 <h4>About</h4>
                 <p>${data.about || "Not specified"}</p>
               </div>
@@ -776,12 +859,20 @@
       // Auth functions
       async function signup() {
         const data = {
-          email: document.getElementById("signupEmail").value,
-          password: document.getElementById("signupPassword").value,
           firstName: document.getElementById("signupFirstName").value,
           lastName: document.getElementById("signupLastName").value,
+          email: document.getElementById("signupEmail").value,
+          password: document.getElementById("signupPassword").value,
           age: parseInt(document.getElementById("signupAge").value),
+          gender: document.getElementById("signupGender").value,
         };
+
+        // Add optional photo URL if provided
+        const photoURL = document.getElementById("signupPhotoURL").value;
+        if (photoURL) {
+          data.photoURL = photoURL;
+        }
+
         const result = await api("/auth/sign-up", {
           method: "POST",
           body: JSON.stringify(data),
@@ -840,7 +931,15 @@
             .getElementById("editSkills")
             .value.split(",")
             .map((s) => s.trim()),
+          gender: document.getElementById("editGender").value,
         };
+
+        // Add optional photo URL if provided
+        const photoURL = document.getElementById("editPhotoURL").value;
+        if (photoURL) {
+          data.photoURL = photoURL;
+        }
+
         const result = await api("/profile/edit", {
           method: "PUT",
           body: JSON.stringify(data),
