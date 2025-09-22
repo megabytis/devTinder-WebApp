@@ -11,6 +11,8 @@ const userRouter = require("./routers/user-router");
 
 const app = express();
 
+require("dotenv").config();
+
 app.use(
   cors({
     origin: ["https://dev-tinder-web-app-six.vercel.app"],
