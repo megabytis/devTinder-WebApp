@@ -43,7 +43,7 @@ userRouter.get("/user/connections", userAuth, async (req, res, next) => {
   }
 });
 
-userRouter.get("/user/requests/recieved", userAuth, async (req, res, next) => {
+userRouter.get("/user/requests/received", userAuth, async (req, res, next) => {
   try {
     const user = req.user;
     const foundDocs = await connectionRequestModel
@@ -53,7 +53,7 @@ userRouter.get("/user/requests/recieved", userAuth, async (req, res, next) => {
       })
       .populate("fromUserID", SAFE_PROPERTIES_TO_SHOW);
 
-    res.json({ message: `All requests Recieved.`, data: foundDocs });
+    res.json({ message: `All requests Received.`, data: foundDocs });
   } catch (err) {
     next(err);
   }
