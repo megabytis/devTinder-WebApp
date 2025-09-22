@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
 
 const connectDB = async () => {
-  await mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await mongoose.connect(
+    "mongodb+srv://devTinder-DB:zOIiecBlsS98Ir2o@devtinder.yzcimn0.mongodb.net/devTinder-DB?retryWrites=true&w=majority&appName=devTinder"
+  );
 };
 
 module.exports = {

@@ -11,39 +11,30 @@ const userRouter = require("./routers/user-router");
 
 const app = express();
 
-const allowedOrigins = [
-  "https://dev-tinder-web-app-woad.vercel.app",
-  "http://localhost:5500",
-  "https://devtinder-webapp.onrender.com",
-];
+// const allowedOrigins = [
+//   "https://dev-tinder-web-app-woad.vercel.app",
+//   "http://localhost:5500",
+//   "https://devtinder-webapp.onrender.com",
+// ];
 
 // ✅ CORS config - UPDATED
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps, Postman, etc.)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.indexOf(origin) === -1) {
-        const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
-        return callback(new Error(msg), false);
-      }
-      return callback(null, true);
-    },
-    credentials: true,
+    origin: ["https://dev-tinder-web-app-sooty.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+    credentials: true,
+    // allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
 );
 
 // ✅ Handle preflight requests for all routes
-app.options("*", cors());
+// app.options("*", cors());
 
 // ✅ Force credentials header
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Credentials", "true");
+//   next();
+// });
 
 app.use(express.json());
 app.use(cookieParser());
