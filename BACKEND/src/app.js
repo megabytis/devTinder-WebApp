@@ -20,7 +20,7 @@ const app = express();
 // ✅ CORS config - UPDATED
 app.use(
   cors({
-    origin: ["https://dev-tinder-web-app-ivory.vercel.app/"],
+    origin: ["https://dev-tinder-web-app-six.vercel.app/"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
     // allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
