@@ -941,7 +941,7 @@
         }
 
         const result = await api("/profile/edit", {
-          method: "PUT",
+          method: "PATCH",
           body: JSON.stringify(data),
         });
         displayResult("Edit Profile Result", result);
