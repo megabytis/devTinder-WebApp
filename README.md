@@ -10,7 +10,7 @@ A MERN-stack web app that connects developers based on **skills, interests, and 
 ---
 
 ## 📸 Screenshots
-![Tinder UI](./screenshots/frontend.png)
+![Tinder UI](./devtinder.gif)
 
 ---
 
