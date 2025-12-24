@@ -15,7 +15,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["https://dev-tinder-web-app-six.vercel.app", "http://localhost:5173"],
+    origin: ["https://dev-tinder-web-app-gray.vercel.app", "http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
     // allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
