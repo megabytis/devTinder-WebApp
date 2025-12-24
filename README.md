@@ -5,7 +5,7 @@ A MERN-stack web app that connects developers based on **skills, interests, and 
 ---
 
 ## 🌐 Live Demo
-👉 [Click here to try DevTinder](https://dev-tinder-web-app-six.vercel.app)
+👉 [Click here to try DevTinder](https://dev-tinder-web-app-gray.vercel.app)
 
 ---
 
