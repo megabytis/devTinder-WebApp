@@ -16,22 +16,24 @@ const SwipeCard = ({ user, onSwipe, isTop }) => {
   const nopeOpacity = useTransform(x, [-100, 0], [1, 0]);
 
   const handleDragEnd = (_, info) => {
-    const threshold = 100;
-    if (info.offset.x > threshold) {
-      setExitX(500);
+    const threshold = 120;
+    const velocity = info.velocity.x;
+    
+    if (info.offset.x > threshold || velocity > 500) {
+      setExitX(1000);
       onSwipe('interested');
-    } else if (info.offset.x < -threshold) {
-      setExitX(-500);
+    } else if (info.offset.x < -threshold || velocity < -500) {
+      setExitX(-1000);
       onSwipe('ignored');
     }
   };
 
   const handleButtonSwipe = (direction) => {
     if (direction === 'like') {
-      setExitX(500);
+      setExitX(1000);
       onSwipe('interested');
     } else {
-      setExitX(-500);
+      setExitX(-1000);
       onSwipe('ignored');
     }
   };
@@ -41,19 +43,22 @@ const SwipeCard = ({ user, onSwipe, isTop }) => {
       className={`swipe-card ${isTop ? 'is-top' : ''}`}
       style={{ x, rotate, opacity }}
       drag={isTop ? 'x' : false}
-      dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-      dragElastic={1}
+      dragConstraints={{ left: 0, right: 0 }}
+      dragElastic={0.7}
       onDragEnd={handleDragEnd}
-      initial={{ scale: isTop ? 1 : 0.95, y: isTop ? 0 : 10 }}
+      whileDrag={{ scale: 1.05, cursor: 'grabbing' }}
+      initial={{ scale: 0.9, opacity: 0, y: 20 }}
       animate={{ 
         scale: isTop ? 1 : 0.95, 
         y: isTop ? 0 : 10,
-        opacity: isTop ? 1 : 0.7
+        opacity: isTop ? 1 : 0.7,
+        transition: { duration: 0.3 }
       }}
       exit={{ 
         x: exitX, 
         opacity: 0,
-        transition: { duration: 0.3 }
+        rotate: exitX > 0 ? 45 : -45,
+        transition: { duration: 0.4, ease: "easeIn" }
       }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
     >

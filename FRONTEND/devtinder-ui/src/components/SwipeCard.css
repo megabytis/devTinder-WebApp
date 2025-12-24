@@ -43,30 +43,32 @@
 /* Swipe Indicators */
 .swipe-indicator {
   position: absolute;
-  top: 30px;
-  padding: 10px 30px;
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: 2px;
-  border: 4px solid;
+  top: 40px;
+  padding: 5px 15px;
+  font-size: 2.5rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  border: 6px solid;
   border-radius: var(--radius-md);
-  transform: rotate(-20deg);
   z-index: 20;
+  text-transform: uppercase;
+  pointer-events: none;
 }
 
 .swipe-indicator.like {
-  right: 20px;
-  color: var(--accent-green);
-  border-color: var(--accent-green);
-  text-shadow: 0 0 20px rgba(0, 212, 106, 0.5);
+  left: 30px;
+  color: #21d4fd;
+  border-color: #21d4fd;
+  transform: rotate(-20deg);
+  text-shadow: 0 0 10px rgba(33, 212, 253, 0.3);
 }
 
 .swipe-indicator.nope {
-  left: 20px;
-  color: var(--accent-red);
-  border-color: var(--accent-red);
+  right: 30px;
+  color: #ff4458;
+  border-color: #ff4458;
   transform: rotate(20deg);
-  text-shadow: 0 0 20px rgba(255, 68, 88, 0.5);
+  text-shadow: 0 0 10px rgba(255, 68, 88, 0.3);
 }
 
 /* Card Content */
@@ -126,6 +128,7 @@
   color: rgba(255, 255, 255, 0.8);
   line-height: 1.4;
   display: -webkit-box;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;

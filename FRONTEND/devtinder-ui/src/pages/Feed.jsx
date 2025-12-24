@@ -37,26 +37,24 @@ const Feed = () => {
     fetchFeed(1);
   }, [fetchFeed]);
 
-  const handleSwipe = async (status) => {
+  const handleSwipe = (status) => {
     if (users.length === 0) return;
     
     const currentUser = users[0];
     
-    try {
-      await requestAPI.sendRequest(status, currentUser._id);
-      
-      // Remove the swiped user
-      setUsers(prev => prev.slice(1));
-      
-      // Load more if running low
-      if (users.length <= 3 && hasMore) {
-        fetchFeed(page + 1);
-        setPage(p => p + 1);
-      }
-    } catch (err) {
+    // Optimistically remove the swiped user immediately
+    setUsers(prev => prev.slice(1));
+    
+    // Fire and forget API call (or handle error silently)
+    requestAPI.sendRequest(status, currentUser._id).catch(err => {
       console.error('Swipe error:', err);
-      // Still remove the card on error to prevent stuck state
-      setUsers(prev => prev.slice(1));
+      // Optional: You could show a toast here, but don't put the card back
+    });
+    
+    // Load more if running low
+    if (users.length <= 3 && hasMore) {
+      fetchFeed(page + 1);
+      setPage(p => p + 1);
     }
   };
 

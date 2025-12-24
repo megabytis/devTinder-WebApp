@@ -41,8 +41,8 @@ app.use((err, req, res, next) => {
 connectDB()
   .then(() => {
     console.log("✅ DB connected to app");
-    app.listen(8080, () => {
-      console.log("🚀 App is listening on port 8080");
+    app.listen(process.env.PORT || 8080, () => {
+      console.log(`🚀 App is listening on port ${process.env.PORT || 8080}`);
     });
   })
   .catch((err) => console.log("DB connection error:", err));
