@@ -1,0 +1,131 @@
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-normal);
+}
+
+.user-card:hover {
+  background: var(--bg-elevated);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.user-card-avatar {
+  flex-shrink: 0;
+}
+
+.user-card-avatar img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--glass-border);
+}
+
+.user-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-card-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.user-card-age {
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.user-card-about {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.user-card-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.mini-skill-tag {
+  padding: 2px 8px;
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #FF8E53;
+}
+
+.mini-skill-tag.more {
+  background: rgba(155, 93, 229, 0.1);
+  border-color: rgba(155, 93, 229, 0.2);
+  color: var(--accent-purple);
+}
+
+.user-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.card-action-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.card-action-btn.reject {
+  background: rgba(255, 68, 88, 0.15);
+  color: var(--accent-red);
+}
+
+.card-action-btn.reject:hover {
+  background: var(--accent-red);
+  color: white;
+  box-shadow: 0 0 15px rgba(255, 68, 88, 0.4);
+}
+
+.card-action-btn.accept {
+  background: rgba(0, 212, 106, 0.15);
+  color: var(--accent-green);
+}
+
+.card-action-btn.accept:hover {
+  background: var(--accent-green);
+  color: white;
+  box-shadow: 0 0 15px rgba(0, 212, 106, 0.4);
+}
+
+@media (max-width: 480px) {
+  .user-card {
+    flex-wrap: wrap;
+  }
+  
+  .user-card-actions {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--glass-border);
+  }
+}

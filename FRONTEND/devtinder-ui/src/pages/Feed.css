@@ -1,0 +1,162 @@
+.feed-page {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.feed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.feed-header h1 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.header-icon {
+  color: #FF6B6B;
+}
+
+.refresh-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--glass-bg);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.refresh-btn:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  transform: rotate(180deg);
+}
+
+.swipe-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-height: 540px;
+}
+
+.cards-stack {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  height: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feed-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  height: 100%;
+  color: var(--text-secondary);
+}
+
+.empty-feed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem;
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+  max-width: 380px;
+  width: 100%;
+}
+
+.empty-icon {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.empty-feed h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.empty-feed p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  max-width: 280px;
+}
+
+.swipe-hints {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 1.5rem 0;
+}
+
+.hint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.hint-icon {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.hint.nope .hint-icon {
+  color: var(--accent-red);
+}
+
+.hint.like .hint-icon {
+  color: var(--accent-green);
+}
+
+@media (max-width: 480px) {
+  .feed-page {
+    padding: 1rem;
+  }
+  
+  .swipe-container {
+    min-height: 500px;
+  }
+  
+  .cards-stack {
+    height: 480px;
+  }
+  
+  .swipe-hints {
+    gap: 1rem;
+    font-size: 0.8rem;
+  }
+}

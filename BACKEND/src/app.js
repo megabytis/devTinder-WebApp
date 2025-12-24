@@ -1,3 +1,5 @@
+require("dotenv").config({ path: require("path").resolve(__dirname, "../../.env") });
+
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -11,11 +13,9 @@ const userRouter = require("./routers/user-router");
 
 const app = express();
 
-require("dotenv").config();
-
 app.use(
   cors({
-    origin: ["https://dev-tinder-web-app-six.vercel.app"],
+    origin: ["https://dev-tinder-web-app-six.vercel.app", "http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
     // allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],

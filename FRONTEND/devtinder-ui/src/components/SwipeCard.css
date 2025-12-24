@@ -1,0 +1,227 @@
+.swipe-card {
+  position: absolute;
+  width: 100%;
+  max-width: 380px;
+  height: 520px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  box-shadow: 
+    0 10px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.swipe-card:active {
+  cursor: grabbing;
+}
+
+.swipe-card.is-top {
+  z-index: 10;
+}
+
+.card-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--bg-card);
+}
+
+.card-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(0, 0, 0, 0.4) 60%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
+}
+
+/* Swipe Indicators */
+.swipe-indicator {
+  position: absolute;
+  top: 30px;
+  padding: 10px 30px;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  border: 4px solid;
+  border-radius: var(--radius-md);
+  transform: rotate(-20deg);
+  z-index: 20;
+}
+
+.swipe-indicator.like {
+  right: 20px;
+  color: var(--accent-green);
+  border-color: var(--accent-green);
+  text-shadow: 0 0 20px rgba(0, 212, 106, 0.5);
+}
+
+.swipe-indicator.nope {
+  left: 20px;
+  color: var(--accent-red);
+  border-color: var(--accent-red);
+  transform: rotate(20deg);
+  text-shadow: 0 0 20px rgba(255, 68, 88, 0.5);
+}
+
+/* Card Content */
+.card-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  z-index: 5;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.card-age {
+  font-weight: 400;
+}
+
+.card-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 0.75rem;
+}
+
+.skill-badge {
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: white;
+}
+
+.skill-badge.more {
+  background: rgba(255, 107, 107, 0.3);
+  border-color: rgba(255, 107, 107, 0.4);
+}
+
+.card-about {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+/* Action Buttons */
+.card-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.action-btn:hover {
+  transform: scale(1.1);
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+.nope-btn {
+  width: 56px;
+  height: 56px;
+  background: white;
+  color: var(--accent-red);
+}
+
+.nope-btn:hover {
+  background: var(--accent-red);
+  color: white;
+  box-shadow: 0 0 25px rgba(255, 68, 88, 0.5);
+}
+
+.like-btn {
+  width: 64px;
+  height: 64px;
+  background: var(--accent-green);
+  color: white;
+}
+
+.like-btn:hover {
+  box-shadow: 0 0 30px rgba(0, 212, 106, 0.6);
+}
+
+.superlike-btn {
+  width: 48px;
+  height: 48px;
+  background: white;
+  color: var(--accent-blue);
+}
+
+.superlike-btn:hover {
+  background: var(--accent-blue);
+  color: white;
+  box-shadow: 0 0 25px rgba(33, 212, 253, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .swipe-card {
+    max-width: 100%;
+    height: 480px;
+    border-radius: var(--radius-lg);
+  }
+  
+  .card-name {
+    font-size: 1.5rem;
+  }
+  
+  .swipe-indicator {
+    font-size: 1.5rem;
+    padding: 8px 20px;
+  }
+  
+  .action-btn.nope-btn,
+  .action-btn.like-btn {
+    width: 52px;
+    height: 52px;
+  }
+  
+  .action-btn.like-btn {
+    width: 60px;
+    height: 60px;
+  }
+}
